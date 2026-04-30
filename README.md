@@ -1,5 +1,9 @@
 # ArtSignal — Read the Chain
 
+<a href="https://orynth.dev/projects/artsignal" target="_blank" rel="noopener">
+  <img src="https://orynth.dev/api/badge/artsignal?theme=light&style=default" alt="Featured on Orynth" width="260" height="80" />
+</a>
+
 Static one-page site for **ArtSignal**, an on-chain signal intelligence brand for the Solana ecosystem.
 
 ## Pages
