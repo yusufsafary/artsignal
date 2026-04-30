@@ -1016,8 +1016,7 @@ body.lb-on nav { top: 32px; }
 <!-- LAUNCH BANNER -->
 <div class="launch-banner" id="launchBanner">
   <span class="lb-pulse"></span>
-  <span class="lb-msg">$SIGNAL launching today · 12:00 UTC on</span>
-  <a class="lb-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">kickstart.easya.io →</a>
+  <span class="lb-msg">$SIGNAL launching today · 12:00 UTC</span>
   <span class="lb-sep">·</span>
   <a class="lb-cta mag" href="https://x.com/artsignalfun" target="_blank" rel="noopener">Follow @artsignalfun</a>
   <span class="lb-cd" id="lbCd">Live now</span>
@@ -1041,7 +1040,6 @@ body.lb-on nav { top: 32px; }
       <span class="wb-dot"></span>
       <span class="wb-text" id="walletText">Connect Wallet</span>
     </button>
-    <a class="nav-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">Buy $SIGNAL</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -1083,7 +1081,6 @@ body.lb-on nav { top: 32px; }
   <a href="#faq" onclick="closeMob()">FAQ</a>
   <a href="#" onclick="closeMob();openWalletModal();return false;">Connect Wallet ◆</a>
   <a href="https://x.com/artsignalfun" target="_blank" rel="noopener" onclick="closeMob()">Follow on X ↗</a>
-  <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" onclick="closeMob()">Buy $SIGNAL ↗</a>
 </nav>
 
 <!-- HERO -->
@@ -1461,12 +1458,11 @@ body.lb-on nav { top: 32px; }
         <p class="launch-sub">
           $SIGNAL is the access and consensus token for the ArtSignal agent network.
           Stake to receive real-time alerts, unlock the API, and earn a share of network revenue.
-          The token launches today on EasyA Kickstart — direct allocation, no insiders, no team unlock at TGE.
+          The token launches today — direct allocation, no insiders, no team unlock at TGE.
         </p>
       </div>
       <div class="launch-meta">
         <div class="lm-row"><div class="lm-k">Network</div><div class="lm-v">Solana · SPL</div></div>
-        <div class="lm-row"><div class="lm-k">Launchpad</div><div class="lm-v">EasyA Kickstart</div></div>
         <div class="lm-row"><div class="lm-k">TGE Unlock</div><div class="lm-v">Public 100% · Team 0%</div></div>
       </div>
     </div>
@@ -1477,9 +1473,6 @@ body.lb-on nav { top: 32px; }
         <div class="launch-cd-cell"><div class="launch-cd-n" id="lcM">00</div><div class="launch-cd-l">Minutes</div></div>
         <div class="launch-cd-cell"><div class="launch-cd-n" id="lcS">00</div><div class="launch-cd-l">Seconds</div></div>
       </div>
-      <a class="launch-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">
-        Launch on Kickstart <span class="launch-cta-arrow">→</span>
-      </a>
       <p class="launch-foot">
         Allocation opens in waves. Read the <a href="whitepaper.html">whitepaper</a> &amp;
         <a href="disclaimer.html">risk disclosure</a> before participating. Not financial advice.
@@ -1575,7 +1568,7 @@ body.lb-on nav { top: 32px; }
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Do I need to hold $SIGNAL tokens to access signals?</span><span class="faq-ic">+</span></button><div class="faq-a">Free tier (Scout) receives delayed signals publicly. Real-time signals and NFT intelligence require staking a minimum of 5,000 $SIGNAL (Alpha tier). Higher tiers unlock pre-signal intelligence and direct analyst access.</div></div>
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">What's your historical win rate?</span><span class="faq-ic">+</span></button><div class="faq-a">Since private alpha in Q4 2024, ArtSignal has issued 847 signals with a 68.3% win rate (signals that hit at least 20% gain before stop loss). Full historical data including bad calls is published monthly on our public dashboard and logged on Solana.</div></div>
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Is this financial advice?</span><span class="faq-ic">+</span></button><div class="faq-a">No. ArtSignal provides on-chain intelligence for informational purposes only. Nothing constitutes financial or investment advice. Always DYOR and never invest more than you can afford to lose.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">When and where does $SIGNAL launch?</span><span class="faq-ic">+</span></button><div class="faq-a">$SIGNAL launches <strong>today (30 April 2026)</strong> on <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px dashed currentColor">EasyA Kickstart</a>. Public allocation opens in waves; there is no team unlock at TGE. Read the whitepaper and risk disclosure before participating.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">When and where does $SIGNAL launch?</span><span class="faq-ic">+</span></button><div class="faq-a">$SIGNAL launches <strong>today (30 April 2026)</strong>. Public allocation opens in waves; there is no team unlock at TGE. Read the whitepaper and risk disclosure before participating.</div></div>
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">How do the four agents actually talk to each other?</span><span class="faq-ic">+</span></button><div class="faq-a">Each agent runs as a separate process and writes its output to a shared message bus. The Crawler emits raw on-chain events. Sentiment emits weighted social vectors. The Scorer consumes both and proposes a candidate signal. The Conviction agent then attempts to falsify it — only signals that survive are written to the on-chain signal log via the consensus oracle.</div></div>
   </div>
   </div>
@@ -1626,6 +1619,9 @@ body.lb-on nav { top: 32px; }
   </div>
   <div class="foot-bottom">
     <span class="foot-copy">© 2026 ArtSignal · artsignal.fun · Not financial advice. DYOR.</span>
+    <a href="https://orynth.dev/projects/artsignal" target="_blank" rel="noopener" class="foot-badge" style="display:inline-flex;align-items:center;line-height:0">
+      <img src="https://orynth.dev/api/badge/artsignal?theme=light&style=default" alt="Featured on Orynth" width="200" height="62" style="display:block;height:auto;max-width:200px" />
+    </a>
     <span class="foot-built">Built on Solana</span>
   </div>
 </footer>
@@ -2004,7 +2000,7 @@ function ckSet(mode){
     if(diff<=0){
       eH.textContent='LIVE'; eM.textContent='◆'; eS.textContent='NOW';
       if(wrap){ wrap.style.fontVariantNumeric='normal'; }
-      if(status) status.textContent='Live now — buy on EasyA Kickstart';
+      if(status) status.textContent='Live now';
       return;
     }
     const h=Math.floor(diff/3600000);
