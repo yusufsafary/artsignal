@@ -693,6 +693,52 @@ footer { padding: 0; }
 .launch-banner .lb-close:hover { opacity: 1; }
 body.lb-on nav { top: 32px; }
 
+/* ─── WALLET BUTTON ─── */
+.wallet-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--ink); padding: 10px 14px;
+  font-family: inherit; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  cursor: pointer; transition: all .18s; line-height: 1; margin-right: 8px;
+}
+.wallet-btn:hover { background: var(--ink); color: var(--paper); }
+.wallet-btn:hover .wb-dot { background: var(--paper); }
+.wallet-btn.connected { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.wallet-btn.connected .wb-dot { background: #14F195; box-shadow: 0 0 8px rgba(20,241,149,.7); animation: wb-pulse 1.6s ease-in-out infinite; }
+.wb-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); display: inline-block; flex-shrink: 0; }
+@keyframes wb-pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ─── WALLET MODAL ─── */
+.wallet-modal { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+.wallet-modal.on { display: flex; }
+.wm-backdrop { position: absolute; inset: 0; background: rgba(10,10,10,.55); backdrop-filter: blur(6px); cursor: pointer; }
+.wm-card {
+  position: relative; z-index: 1; background: var(--paper); border: 1px solid var(--ink);
+  width: 100%; max-width: 420px; padding: 32px 28px 24px;
+  box-shadow: 12px 12px 0 rgba(10,10,10,.08);
+}
+.wm-close { position: absolute; top: 8px; right: 10px; background: none; border: none; font-size: 22px; line-height: 1; color: var(--ink); opacity: .5; cursor: pointer; padding: 6px 10px; }
+.wm-close:hover { opacity: 1; }
+.wm-eyebrow { font-size: 9px; letter-spacing: 3px; color: var(--mid); text-transform: uppercase; margin-bottom: 6px; }
+.wm-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 28px; line-height: 1.15; margin: 0 0 10px; color: var(--ink); }
+.wm-sub { font-size: 12px; line-height: 1.5; color: var(--mid); margin: 0 0 22px; }
+.wm-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.wm-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; background: var(--paper);
+  border: 1px solid rgba(10,10,10,.18); cursor: pointer;
+  font-family: inherit; font-size: 14px; color: var(--ink); text-align: left;
+  transition: all .15s;
+}
+.wm-row:hover { border-color: var(--ink); transform: translateX(2px); }
+.wm-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 13px; flex-shrink: 0; border-radius: 6px; }
+.wm-name { flex: 1; font-weight: 500; }
+.wm-tag { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); padding: 4px 8px; border: 1px solid rgba(10,10,10,.15); }
+.wm-tag.detected { color: #14a865; border-color: #14a865; }
+.wm-tag.install { color: var(--mid); }
+.wm-foot { font-size: 10px; letter-spacing: 1px; color: var(--mid); text-align: center; }
+.wm-foot a { color: var(--ink); border-bottom: 1px dashed var(--mid); text-decoration: none; }
+
 /* ─── HERO CANVAS (shared overlay styles) ─── */
 .net-legend span { background: rgba(242,240,235,0.85); padding: 4px 8px; backdrop-filter: blur(4px); }
 .net-hover { position: absolute; top: 60px; left: 24px; background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 3; }
@@ -830,10 +876,14 @@ body.lb-on nav { top: 32px; }
   nav { padding: 0 20px; }
   .nav-links { display: none; }
   .nav-right .nav-cta { display: none; }
+  .nav-right .wallet-btn { display: none; }
   .hamburger { display: flex; }
   .hero-canvas-top { height: 100vh; min-height: 100vh; }
   .hero-canvas-top .hct-overlay { max-width: calc(100% - 32px); top: 70px; left: 16px; }
-  .hero-canvas-top .net-legend { bottom: 10px; left: 16px; right: 16px; font-size: 8px; }
+  body.lb-on .hero-canvas-top .hct-overlay { top: 102px; }
+  .hero-canvas-top .net-legend { bottom: 10px; left: 16px; right: 16px; font-size: 8px; flex-direction: column; gap: 4px; align-items: flex-start; }
+  .hero-scroll { bottom: 80px; font-size: 7px; padding: 5px 10px; }
+  .hero-scroll::before { width: 18px; }
   .hero-left, .hero-right { padding: 40px 20px; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .section-band { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -897,8 +947,9 @@ body.lb-on nav { top: 32px; }
   .alc-cell:nth-child(1), .alc-cell:nth-child(2) { border-bottom: var(--em); }
   .agent-stage { height: 380px; }
   .net-stats { display: none; }
-  .launch-banner { font-size: 9px; gap: 12px; padding: 0 12px; }
+  .launch-banner { font-size: 9px; gap: 10px; padding: 0 12px; }
   .launch-banner .lb-cd { display: none; }
+  .launch-banner .lb-sep { display: none; }
 }
 @media (max-width: 640px) {
   .launch-title { font-size: 44px; }
@@ -913,8 +964,9 @@ body.lb-on nav { top: 32px; }
   .hero-stats-strip .hss-n { font-size: 32px; }
   .hero-stats-strip .hss-cell { padding: 20px 18px; }
   .hero-canvas-top { min-height: 100vh; height: 100vh; }
-  .launch-banner { letter-spacing: 2px; }
-  .launch-banner > span:nth-child(2) { display: none; }
+  .launch-banner { letter-spacing: 1.5px; gap: 8px; }
+  .launch-banner .lb-msg { display: none; }
+  .launch-banner a.lb-cta:nth-of-type(2) { display: none; }
 }
 </style>
 </head>
@@ -927,8 +979,10 @@ body.lb-on nav { top: 32px; }
 <!-- LAUNCH BANNER -->
 <div class="launch-banner" id="launchBanner">
   <span class="lb-pulse"></span>
-  <span>$SIGNAL launching today on</span>
+  <span class="lb-msg">$SIGNAL launching today · 12:00 UTC on</span>
   <a class="lb-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">kickstart.easya.io →</a>
+  <span class="lb-sep">·</span>
+  <a class="lb-cta mag" href="https://x.com/artsignalfun" target="_blank" rel="noopener">Follow @artsignalfun</a>
   <span class="lb-cd" id="lbCd">Live now</span>
   <button class="lb-close" id="lbClose" aria-label="Dismiss">×</button>
 </div>
@@ -946,10 +1000,42 @@ body.lb-on nav { top: 32px; }
     <li><a href="#faq">FAQ</a></li>
   </ul>
   <div class="nav-right">
+    <button class="wallet-btn" id="walletBtn" type="button">
+      <span class="wb-dot"></span>
+      <span class="wb-text" id="walletText">Connect Wallet</span>
+    </button>
     <a class="nav-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">Buy $SIGNAL</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<!-- WALLET MODAL -->
+<div class="wallet-modal" id="walletModal" aria-hidden="true">
+  <div class="wm-backdrop" data-wm-close></div>
+  <div class="wm-card" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
+    <button class="wm-close" data-wm-close aria-label="Close">×</button>
+    <div class="wm-eyebrow">// Solana Wallet</div>
+    <h3 class="wm-title" id="wmTitle">Connect to read the chain</h3>
+    <p class="wm-sub">Sign in with a Solana wallet to track your $SIGNAL allocation, watchlist, and on-chain conviction score.</p>
+    <div class="wm-list">
+      <button class="wm-row" data-wallet="phantom">
+        <span class="wm-icon" aria-hidden="true" style="background:#AB9FF2">P</span>
+        <span class="wm-name">Phantom</span>
+        <span class="wm-tag" id="wmPhTag">Detect</span>
+      </button>
+      <button class="wm-row" data-wallet="backpack">
+        <span class="wm-icon" aria-hidden="true" style="background:#E33E3F">B</span>
+        <span class="wm-name">Backpack</span>
+        <span class="wm-tag" id="wmBpTag">Detect</span>
+      </button>
+      <button class="wm-row" data-wallet="solflare">
+        <span class="wm-icon" aria-hidden="true" style="background:#FFB02B">S</span>
+        <span class="wm-name">Solflare</span>
+        <span class="wm-tag" id="wmSfTag">Detect</span>
+      </button>
+    </div>
+    <div class="wm-foot">By connecting you agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy</a>.</div>
+  </div>
+</div>
 <nav class="mob-menu" id="mobMenu">
   <a href="#signals" onclick="closeMob()">Signals</a>
   <a href="#agents" onclick="closeMob()">Network</a>
@@ -958,6 +1044,8 @@ body.lb-on nav { top: 32px; }
   <a href="#launch" onclick="closeMob()">Launch</a>
   <a href="#about" onclick="closeMob()">About</a>
   <a href="#faq" onclick="closeMob()">FAQ</a>
+  <a href="#" onclick="closeMob();openWalletModal();return false;">Connect Wallet ◆</a>
+  <a href="https://x.com/artsignalfun" target="_blank" rel="noopener" onclick="closeMob()">Follow on X ↗</a>
   <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" onclick="closeMob()">Buy $SIGNAL ↗</a>
 </nav>
 
@@ -1846,17 +1934,17 @@ function ckSet(mode){
     document.body.classList.remove('lb-on');
     try{ localStorage.setItem('as_lb_dismissed','1'); }catch(e){}
   });
-  // tick: launch target = today 18:00 UTC; if past, "Live now"
+  // tick: launch target = today 12:00 UTC; if past, "Live now"
   function lbTick(){
     if(!cd) return;
     const now=new Date();
-    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 18, 0, 0));
+    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12, 0, 0));
     let diff=target.getTime()-Date.now();
     if(diff<=0){ cd.textContent='Live now ◆'; return; }
     const h=Math.floor(diff/3600000);
     const m=Math.floor((diff%3600000)/60000);
     const s=Math.floor((diff%60000)/1000);
-    cd.textContent='Goes live in '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' UTC';
+    cd.textContent='T-'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   }
   lbTick(); setInterval(lbTick,1000);
 })();
@@ -1869,7 +1957,7 @@ function ckSet(mode){
   if(!eH) return;
   function tick(){
     const now=new Date();
-    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 18, 0, 0));
+    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12, 0, 0));
     let diff=target.getTime()-Date.now();
     if(diff<=0){
       eH.textContent='LIVE'; eM.textContent='◆'; eS.textContent='NOW';
@@ -1883,7 +1971,7 @@ function ckSet(mode){
     eH.textContent=String(h).padStart(2,'0');
     eM.textContent=String(m).padStart(2,'0');
     eS.textContent=String(s).padStart(2,'0');
-    if(status) status.textContent='Goes live at 18:00 UTC today';
+    if(status) status.textContent='Goes live at 12:00 UTC today';
   }
   tick(); setInterval(tick,1000);
 })();
@@ -1917,6 +2005,14 @@ function ckSet(mode){
   let mouse={x:-9999,y:-9999,inside:false,dragging:false};
   let grabbed=null;
   let hovered=null;
+  let pulses=[];     // expanding signal rings
+  let flows=[];      // moving dots traveling along an edge
+  let frame=0;
+  const isMobile=window.matchMedia('(max-width: 640px)').matches;
+  const LINK_DIST = isMobile ? 110 : 150;
+  const WANDER = isMobile ? 0.05 : 0.07;
+  const SOL_PURPLE='#9945FF';
+  const SOL_GREEN='#14F195';
 
   function resize(){
     const r=wrap.getBoundingClientRect();
@@ -1933,57 +2029,94 @@ function ckSet(mode){
         ...d, r,
         x: 40 + Math.random()*(W-80),
         y: 40 + Math.random()*(H-80),
-        vx: (Math.random()-0.5)*0.25,
-        vy: (Math.random()-0.5)*0.25,
-        ox: 0, oy: 0
+        vx: (Math.random()-0.5)*0.6,
+        vy: (Math.random()-0.5)*0.6,
+        ox: 0, oy: 0,
+        phase: Math.random()*Math.PI*2,   // for breath pulse
+        glow: 0,                           // 0..1 boost on signal pulse
+        flashUntil: 0
       };
     });
     nodes.forEach(n=>{n.ox=n.x;n.oy=n.y;});
   }
   function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); }
+
+  // emit a signal pulse from a high-score node
+  function emitPulse(){
+    // pick a high-score node weighted
+    const candidates=nodes.filter(n=>n.s>=7);
+    if(!candidates.length) return;
+    const src=candidates[Math.floor(Math.random()*candidates.length)];
+    const isAlpha=src.s>=8.5;
+    pulses.push({x:src.x, y:src.y, r:src.r, life:0, max: isMobile?180:260, color: isAlpha?SOL_GREEN:SOL_PURPLE, src});
+    src.glow=1; src.flashUntil=frame+30;
+    // emit signal flows to nearest 2-3 connected nodes
+    const targets=nodes
+      .filter(n=>n!==src)
+      .map(n=>({n, d:dist(src,n)}))
+      .filter(o=>o.d<LINK_DIST*1.4)
+      .sort((a,b)=>a.d-b.d)
+      .slice(0, 2+Math.floor(Math.random()*2));
+    targets.forEach(o=>{
+      flows.push({from:src, to:o.n, t:0, speed:0.012+Math.random()*0.012, color:isAlpha?SOL_GREEN:SOL_PURPLE});
+    });
+  }
+
   function step(){
+    frame++;
     // physics
     let edges=0;
     nodes.forEach(n=>{
-      // wander
-      n.vx+=(Math.random()-0.5)*0.04;
-      n.vy+=(Math.random()-0.5)*0.04;
+      // wander (more energetic)
+      n.vx+=(Math.random()-0.5)*WANDER;
+      n.vy+=(Math.random()-0.5)*WANDER;
       // damping
-      n.vx*=0.96; n.vy*=0.96;
-      // weak spring back to origin
-      n.vx+=(n.ox-n.x)*0.0008;
-      n.vy+=(n.oy-n.y)*0.0008;
+      n.vx*=0.97; n.vy*=0.97;
+      // weak spring back to origin (looser)
+      n.vx+=(n.ox-n.x)*0.0005;
+      n.vy+=(n.oy-n.y)*0.0005;
       // mouse repulsion (gentle)
       if(mouse.inside){
         const dx=n.x-mouse.x, dy=n.y-mouse.y;
         const d2=dx*dx+dy*dy;
-        if(d2<14400){ // within 120px
+        if(d2<14400){
           const d=Math.sqrt(d2)||1;
-          const f=(1-d/120)*0.6;
+          const f=(1-d/120)*0.7;
           n.vx+=(dx/d)*f;
           n.vy+=(dy/d)*f;
         }
       }
       n.x+=n.vx; n.y+=n.vy;
+      // soft drift / very slow rotation around origin for breath
+      const breath=Math.sin((frame+n.phase*60)*0.01)*0.04;
+      n.x+=Math.cos(n.phase)*breath;
+      n.y+=Math.sin(n.phase)*breath;
       // bounds
-      if(n.x<n.r) {n.x=n.r; n.vx*=-0.4;}
-      if(n.x>W-n.r) {n.x=W-n.r; n.vx*=-0.4;}
-      if(n.y<n.r) {n.y=n.r; n.vy*=-0.4;}
-      if(n.y>H-n.r) {n.y=H-n.r; n.vy*=-0.4;}
+      if(n.x<n.r) {n.x=n.r; n.vx*=-0.5;}
+      if(n.x>W-n.r) {n.x=W-n.r; n.vx*=-0.5;}
+      if(n.y<n.r) {n.y=n.r; n.vy*=-0.5;}
+      if(n.y>H-n.r) {n.y=H-n.r; n.vy*=-0.5;}
+      // glow decay
+      n.glow*=0.94;
     });
     if(grabbed){
       grabbed.x+=(mouse.x-grabbed.x)*0.35;
       grabbed.y+=(mouse.y-grabbed.y)*0.35;
       grabbed.vx=0; grabbed.vy=0;
     }
+
+    // periodic signal pulses (every ~2.5s)
+    if(frame%150===0) emitPulse();
+
     // draw
     ctx.clearRect(0,0,W,H);
-    // edges
+
+    // edges (some carry "active flow" highlight)
     for(let i=0;i<nodes.length;i++){
       for(let j=i+1;j<nodes.length;j++){
         const d=dist(nodes[i],nodes[j]);
-        if(d<140){
-          const a=(1-d/140)*0.45;
+        if(d<LINK_DIST){
+          const a=(1-d/LINK_DIST)*0.45;
           ctx.strokeStyle=`rgba(10,10,10,${a*0.55})`;
           ctx.lineWidth=0.7;
           ctx.beginPath();
@@ -1994,6 +2127,46 @@ function ckSet(mode){
         }
       }
     }
+
+    // signal flows (dots traveling along edges)
+    flows = flows.filter(f=>{
+      f.t += f.speed;
+      if(f.t>=1) return false;
+      const x = f.from.x + (f.to.x-f.from.x)*f.t;
+      const y = f.from.y + (f.to.y-f.from.y)*f.t;
+      // tail
+      ctx.strokeStyle = f.color + '88';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      const tt = Math.max(0, f.t-0.18);
+      ctx.moveTo(f.from.x + (f.to.x-f.from.x)*tt, f.from.y + (f.to.y-f.from.y)*tt);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      // head
+      ctx.fillStyle = f.color;
+      ctx.beginPath();
+      ctx.arc(x,y, 2.4, 0, Math.PI*2);
+      ctx.fill();
+      // arrival flash on target node
+      if(f.t>0.95){ f.to.glow = Math.max(f.to.glow, 0.8); f.to.flashUntil = frame+20; }
+      return true;
+    });
+
+    // pulse rings
+    pulses = pulses.filter(p=>{
+      p.life++;
+      if(p.life>=p.max) return false;
+      const t = p.life/p.max;
+      const radius = p.r + t*Math.min(W,H)*0.45;
+      const alpha = (1-t)*0.55;
+      ctx.strokeStyle = p.color + Math.floor(alpha*255).toString(16).padStart(2,'0');
+      ctx.lineWidth = 1.2*(1-t)+0.4;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI*2);
+      ctx.stroke();
+      return true;
+    });
+
     // hover edge from cursor
     if(mouse.inside && hovered){
       ctx.strokeStyle='rgba(10,10,10,0.6)';
@@ -2005,13 +2178,30 @@ function ckSet(mode){
       ctx.stroke();
       ctx.setLineDash([]);
     }
+
     // nodes
     nodes.forEach(n=>{
       const isHover=(n===hovered);
+      const breath = 1 + Math.sin((frame+n.phase*60)*0.04)*0.08;
+      const r = n.r * breath + n.glow*4;
+
+      // outer glow ring for signal-emitting nodes
+      if(n.glow>0.05){
+        const grad=ctx.createRadialGradient(n.x,n.y,r,n.x,n.y,r+18);
+        grad.addColorStop(0, (n.s>=8.5?SOL_GREEN:SOL_PURPLE)+'66');
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle=grad;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,r+18,0,Math.PI*2);
+        ctx.fill();
+      }
+
       ctx.beginPath();
-      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      // fill if score >= 7 (bull-ish) or hover
-      if(n.s>=7 || isHover){
+      ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      if(n.flashUntil>frame){
+        ctx.fillStyle = n.s>=8.5 ? SOL_GREEN : SOL_PURPLE;
+        ctx.fill();
+      } else if(n.s>=7 || isHover){
         ctx.fillStyle='#0A0A0A';
         ctx.fill();
       } else {
@@ -2021,9 +2211,18 @@ function ckSet(mode){
         ctx.strokeStyle='#0A0A0A';
         ctx.stroke();
       }
+      // subtle persistent halo for top alpha (>=8.5)
+      if(n.s>=8.5 && !isHover){
+        const haloPulse = (Math.sin(frame*0.06+n.phase)+1)*0.5;
+        ctx.strokeStyle = `rgba(20,241,149,${0.15+haloPulse*0.25})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,r+4+haloPulse*2,0,Math.PI*2);
+        ctx.stroke();
+      }
       if(isHover){
         ctx.beginPath();
-        ctx.arc(n.x,n.y,n.r+5,0,Math.PI*2);
+        ctx.arc(n.x,n.y,r+6,0,Math.PI*2);
         ctx.strokeStyle='rgba(10,10,10,0.5)';
         ctx.lineWidth=1;
         ctx.stroke();
@@ -2242,6 +2441,111 @@ function ckSet(mode){
     cell.addEventListener('mouseleave',()=>{
       highlightNode(cell.dataset.id, false);
     });
+  });
+})();
+
+// ── SOLANA WALLET CONNECT (Phantom / Backpack / Solflare)
+function openWalletModal(){
+  const m=document.getElementById('walletModal');
+  if(!m) return;
+  m.classList.add('on');
+  m.setAttribute('aria-hidden','false');
+  // detect availability
+  const phantom = (typeof window.solana!=='undefined' && window.solana.isPhantom) || (window.phantom && window.phantom.solana);
+  const backpack = (typeof window.backpack!=='undefined') || (window.xnft && window.xnft.solana);
+  const solflare = typeof window.solflare!=='undefined';
+  const setTag=(id,present)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.textContent = present?'Detected':'Install';
+    el.classList.toggle('detected', present);
+    el.classList.toggle('install', !present);
+  };
+  setTag('wmPhTag', !!phantom);
+  setTag('wmBpTag', !!backpack);
+  setTag('wmSfTag', !!solflare);
+}
+function closeWalletModal(){
+  const m=document.getElementById('walletModal');
+  if(!m) return;
+  m.classList.remove('on');
+  m.setAttribute('aria-hidden','true');
+}
+(function(){
+  const btn=document.getElementById('walletBtn');
+  const modal=document.getElementById('walletModal');
+  const txt=document.getElementById('walletText');
+  if(!btn||!modal) return;
+
+  // restore saved connection (display only — auto-reconnect would prompt on every load)
+  try{
+    const saved=localStorage.getItem('as_wallet');
+    if(saved){
+      const {addr, name}=JSON.parse(saved);
+      setConnected(addr, name);
+    }
+  }catch(e){}
+
+  btn.addEventListener('click',()=>{
+    if(btn.classList.contains('connected')){
+      // disconnect
+      try{ localStorage.removeItem('as_wallet'); }catch(e){}
+      btn.classList.remove('connected');
+      txt.textContent='Connect Wallet';
+      // also disconnect provider
+      if(window.solana && window.solana.disconnect) try{ window.solana.disconnect(); }catch(e){}
+      showToast && showToast('Wallet disconnected');
+      return;
+    }
+    openWalletModal();
+  });
+
+  modal.addEventListener('click',(e)=>{
+    if(e.target.matches('[data-wm-close]')) closeWalletModal();
+  });
+
+  function setConnected(addr, name){
+    btn.classList.add('connected');
+    const short = addr.slice(0,4)+'…'+addr.slice(-4);
+    txt.textContent = short;
+    btn.title = name+' · '+addr+' (click to disconnect)';
+  }
+
+  async function connect(which){
+    let provider=null, label=which;
+    if(which==='phantom'){
+      provider = (window.phantom && window.phantom.solana) || (window.solana && window.solana.isPhantom ? window.solana : null);
+      if(!provider){ window.open('https://phantom.app/','_blank'); return; }
+      label='Phantom';
+    } else if(which==='backpack'){
+      provider = (window.xnft && window.xnft.solana) || window.backpack || null;
+      if(!provider){ window.open('https://backpack.app/','_blank'); return; }
+      label='Backpack';
+    } else if(which==='solflare'){
+      provider = window.solflare || null;
+      if(!provider){ window.open('https://solflare.com/','_blank'); return; }
+      label='Solflare';
+    }
+    try{
+      const resp = await provider.connect();
+      const pk = (resp && resp.publicKey) ? resp.publicKey : provider.publicKey;
+      const addr = pk.toString ? pk.toString() : String(pk);
+      setConnected(addr, label);
+      try{ localStorage.setItem('as_wallet', JSON.stringify({addr, name:label})); }catch(e){}
+      closeWalletModal();
+      if(typeof showToast==='function') showToast(label+' connected · '+addr.slice(0,4)+'…'+addr.slice(-4));
+    }catch(err){
+      if(typeof showToast==='function') showToast('Connection cancelled');
+    }
+  }
+
+  modal.querySelectorAll('.wm-row').forEach(row=>{
+    row.addEventListener('click',()=>connect(row.dataset.wallet));
+  });
+
+  // ESC to close
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape' && modal.classList.contains('on')) closeWalletModal();
   });
 })();
 </script>
