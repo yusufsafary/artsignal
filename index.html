@@ -169,11 +169,15 @@ nav {
 .hero-canvas-top .hct-overlay {
   position: absolute; top: 24px; left: 24px;
   display: flex; flex-direction: column; gap: 10px; z-index: 2; pointer-events: none;
-  max-width: 50%;
+  max-width: calc(100% - 48px);
 }
 .hero-canvas-top .hct-tag {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
   font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
+  background: rgba(242,240,235,0.92); backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 6px 10px; border: 1px solid rgba(10,10,10,0.12);
+  max-width: 100%;
 }
 .hero-content {
   display: grid; grid-template-columns: 1fr 1fr;
