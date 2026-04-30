@@ -176,14 +176,46 @@ nav {
 body.lb-on .hero-canvas-top .hct-overlay { top: 132px; }
 .hero-canvas-top .net-stats { top: 100px !important; }
 body.lb-on .hero-canvas-top .net-stats { top: 132px !important; }
-.hero-canvas-top .hct-tag {
-  display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
-  background: rgba(242,240,235,0.95); backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 8px 12px; border: 1px solid var(--ink);
+/* Launch announcement card inside the canvas overlay */
+.launch-card {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: rgba(242,240,235,0.95);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  padding: 14px 18px;
+  border: 1px solid var(--ink);
+  text-decoration: none; color: var(--ink);
+  box-shadow: 4px 4px 0 rgba(10,10,10,.08);
   max-width: 100%;
+  transition: transform .2s ease, box-shadow .2s ease;
+  pointer-events: auto;
 }
+.launch-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(10,10,10,.12); }
+.lc-pulse {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #14F195;
+  box-shadow: 0 0 12px rgba(20,241,149,.65);
+  animation: lc-pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes lc-pulse { 0%,100%{ transform:scale(1); opacity:1 } 50%{ transform:scale(1.35); opacity:.55 } }
+.lc-body { display: flex; flex-direction: column; gap: 4px; }
+.lc-eyebrow {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid);
+}
+.lc-headline {
+  font-family: 'Instrument Serif', serif; font-size: 20px; line-height: 1.15; color: var(--ink);
+}
+.lc-headline em { font-style: italic; color: #9945FF; font-weight: 400; }
+.lc-meta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--mid);
+  margin-top: 2px;
+}
+.lc-cd { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 500; }
+.lc-link { color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 1px; }
+.lc-sep { opacity: .4; }
+.launch-card.live .lc-cd::before { content: '◆ '; color: #14F195; }
 .hero-content {
   display: grid; grid-template-columns: 1fr 1fr;
   align-items: end;
@@ -881,6 +913,11 @@ body.lb-on nav { top: 32px; }
   .hero-canvas-top { height: 100vh; min-height: 100vh; }
   .hero-canvas-top .hct-overlay { max-width: calc(100% - 32px); top: 70px; left: 16px; }
   body.lb-on .hero-canvas-top .hct-overlay { top: 102px; }
+  .launch-card { padding: 12px 14px; gap: 12px; max-width: 100%; }
+  .lc-headline { font-size: 16px; }
+  .lc-eyebrow { font-size: 8px; letter-spacing: 2.5px; }
+  .lc-meta { font-size: 8px; gap: 6px; flex-wrap: wrap; }
+  .lc-pulse { width: 8px; height: 8px; }
   .hero-canvas-top .net-legend { bottom: 10px; left: 16px; right: 16px; font-size: 8px; flex-direction: column; gap: 4px; align-items: flex-start; }
   .hero-scroll { bottom: 80px; font-size: 7px; padding: 5px 10px; }
   .hero-scroll::before { width: 18px; }
@@ -1055,7 +1092,18 @@ body.lb-on nav { top: 32px; }
   <div class="hero-canvas-top">
     <canvas id="netCanvas" aria-label="Live signal constellation"></canvas>
     <div class="hct-overlay">
-      <div class="hct-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence · 4 agents online</div>
+      <a class="launch-card rv" href="https://kickstart.easya.io/" target="_blank" rel="noopener">
+        <div class="lc-pulse"></div>
+        <div class="lc-body">
+          <div class="lc-eyebrow">Token Launch · Today</div>
+          <div class="lc-headline">$SIGNAL goes live <em>12:00 UTC</em></div>
+          <div class="lc-meta">
+            <span class="lc-cd" id="lcOverlayCd">T-00:00:00</span>
+            <span class="lc-sep">·</span>
+            <span class="lc-link">kickstart.easya.io →</span>
+          </div>
+        </div>
+      </a>
     </div>
     <div class="net-stats">
       <div class="ns-cell"><div class="ns-n" id="nsNodes">0</div><div class="ns-l">Signals</div></div>
@@ -1935,16 +1983,24 @@ function ckSet(mode){
     try{ localStorage.setItem('as_lb_dismissed','1'); }catch(e){}
   });
   // tick: launch target = today 12:00 UTC; if past, "Live now"
+  const overlayCd=document.getElementById('lcOverlayCd');
+  const overlayCard=document.querySelector('.launch-card');
   function lbTick(){
-    if(!cd) return;
     const now=new Date();
     const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12, 0, 0));
     let diff=target.getTime()-Date.now();
-    if(diff<=0){ cd.textContent='Live now ◆'; return; }
+    if(diff<=0){
+      if(cd) cd.textContent='Live now ◆';
+      if(overlayCd) overlayCd.textContent='Live now';
+      if(overlayCard) overlayCard.classList.add('live');
+      return;
+    }
     const h=Math.floor(diff/3600000);
     const m=Math.floor((diff%3600000)/60000);
     const s=Math.floor((diff%60000)/1000);
-    cd.textContent='T-'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    const txt='T-'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(cd) cd.textContent=txt;
+    if(overlayCd) overlayCd.textContent=txt;
   }
   lbTick(); setInterval(lbTick,1000);
 })();
