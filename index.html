@@ -620,6 +620,97 @@ footer { padding: 0; }
 }
 .cookie-bar.show { display: flex; }
 .cookie-bar.in { transform: translateY(0); }
+
+/* ─── LAUNCH BANNER (top) ─── */
+.launch-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 102; height: 32px; background: var(--paper); border-bottom: 1px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 0 16px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; }
+.launch-banner .lb-pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: lb-pulse 1.4s ease-in-out infinite; flex-shrink: 0; }
+@keyframes lb-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.65); } }
+.launch-banner a.lb-cta { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 1px; font-weight: 500; }
+.launch-banner a.lb-cta:hover { background: var(--ink); color: var(--paper); padding: 3px 7px; border: none; }
+.launch-banner .lb-cd { font-variant-numeric: tabular-nums; opacity: .6; letter-spacing: 2px; }
+.launch-banner .lb-close { background: none; border: none; cursor: none; opacity: .35; padding: 4px 8px; font-size: 14px; color: var(--ink); margin-left: auto; line-height: 1; }
+.launch-banner .lb-close:hover { opacity: 1; }
+body.lb-on .ticker-bar { top: 32px; }
+body.lb-on nav { top: 60px; }
+
+/* ─── HERO CANVAS ─── */
+.hero-canvas-wrap { position: relative; height: 100%; min-height: 520px; border-left: var(--em); overflow: hidden; }
+#netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: none; }
+.net-legend { position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); z-index: 2; }
+.net-legend span { background: rgba(242,240,235,0.85); padding: 4px 8px; backdrop-filter: blur(4px); }
+.net-hover { position: absolute; top: 16px; left: 16px; background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 3; }
+.net-hover.on { opacity: 1; }
+.net-hover .nh-asset { font-size: 13px; letter-spacing: 1.5px; margin-bottom: 4px; }
+.net-hover .nh-meta { opacity: .65; font-size: 9px; }
+.net-stats { position: absolute; top: 16px; right: 16px; display: flex; gap: 0; z-index: 2; pointer-events: none; }
+.net-stats .ns-cell { padding: 8px 14px; background: rgba(242,240,235,0.85); border: 1px solid var(--ink); border-left: none; }
+.net-stats .ns-cell:first-child { border-left: 1px solid var(--ink); }
+.net-stats .ns-n { font-size: 16px; font-variant-numeric: tabular-nums; }
+.net-stats .ns-l { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); margin-top: 2px; }
+
+/* ─── HERO STATS STRIP (below hero) ─── */
+.hero-stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--em); border-bottom: var(--em); }
+.hero-stats-strip .hss-cell { padding: 28px 32px; border-right: var(--em); }
+.hero-stats-strip .hss-cell:last-child { border-right: none; }
+.hero-stats-strip .hss-n { font: italic 44px/1 'Instrument Serif'; }
+.hero-stats-strip .hss-l { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-top: 12px; }
+
+/* ─── AGENT NETWORK SECTION ─── */
+#agents { padding: 100px 0 100px; border-bottom: var(--em); position: relative; }
+#agents .section-head { padding: 0 40px 0; }
+.agent-stage { position: relative; max-width: 1100px; margin: 56px auto 0; padding: 0 40px; height: 480px; }
+.agent-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.agent-node-circle { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; transition: fill .3s; }
+.agent-node-circle.active { fill: var(--ink); }
+.agent-node-ring { fill: none; stroke: var(--ink); stroke-width: 1; opacity: 0; }
+.agent-node-ring.pulse { animation: ag-ring 1.4s ease-out forwards; }
+@keyframes ag-ring { 0% { opacity: .8; r: 36; } 100% { opacity: 0; r: 80; } }
+.agent-label { font: 500 11px 'DM Mono'; letter-spacing: 3px; fill: var(--ink); text-transform: uppercase; text-anchor: middle; }
+.agent-label-sub { font: 400 8px 'DM Mono'; letter-spacing: 2px; fill: var(--mid); text-anchor: middle; text-transform: uppercase; }
+.agent-link { stroke: var(--ink); stroke-width: 1; opacity: .12; fill: none; }
+.agent-link.active { opacity: .35; }
+.agent-pulse-dot { fill: var(--ink); }
+.agent-msg { position: absolute; background: var(--ink); color: var(--paper); padding: 6px 10px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; pointer-events: none; opacity: 0; transform: translate(-50%,-50%); transition: opacity .25s; white-space: nowrap; z-index: 5; }
+.agent-msg.show { opacity: 1; }
+.agent-legend-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--em); margin-top: 40px; }
+.alc-cell { padding: 32px; border-right: var(--em); cursor: pointer; transition: background .25s; }
+.alc-cell:last-child { border-right: none; }
+.alc-cell:hover, .alc-cell.on { background: var(--ink); color: var(--paper); }
+.alc-cell:hover .alc-num, .alc-cell.on .alc-num { color: var(--paper); opacity: .55; }
+.alc-cell:hover .alc-stat, .alc-cell.on .alc-stat { color: var(--paper); opacity: .55; }
+.alc-num { font: italic 36px 'Instrument Serif'; color: var(--mid); }
+.alc-name { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 8px 0 8px; }
+.alc-desc { font-size: 11px; line-height: 1.6; }
+.alc-stat { margin-top: 14px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); }
+
+/* ─── LAUNCH SECTION (replaces tokenomics) ─── */
+#launch { padding: 0; border-bottom: var(--em); background: var(--ink); color: var(--paper); position: relative; }
+.launch-grid { display: grid; grid-template-columns: 1.15fr 1fr; min-height: 580px; }
+.launch-left { padding: 80px 60px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid rgba(255,255,255,0.15); }
+.launch-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; opacity: .55; display: flex; align-items: center; gap: 12px; }
+.launch-eyebrow .le-dot { width: 7px; height: 7px; background: var(--paper); border-radius: 50%; animation: lb-pulse 1.4s ease-in-out infinite; }
+.launch-title { font: italic 80px/.95 'Instrument Serif'; margin: 28px 0 28px; }
+.launch-title em { font-style: normal; opacity: .5; }
+.launch-sub { font-size: 14px; line-height: 1.7; max-width: 540px; opacity: .85; }
+.launch-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 40px; margin-top: 48px; }
+.lm-row { border-top: 1px solid rgba(255,255,255,0.18); padding-top: 14px; }
+.lm-k { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; opacity: .5; }
+.lm-v { font-size: 13px; margin-top: 6px; font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+.launch-right { padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 36px; }
+.launch-status { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; gap: 12px; opacity: .7; }
+.launch-status .ls-dot { width: 7px; height: 7px; background: var(--paper); border-radius: 50%; animation: lb-pulse 1.4s ease-in-out infinite; }
+.launch-cd-wrap { display: flex; gap: 32px; }
+.launch-cd-cell { }
+.launch-cd-n { font: 400 56px/.9 'DM Mono'; font-variant-numeric: tabular-nums; }
+.launch-cd-l { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; opacity: .5; margin-top: 10px; }
+.launch-cta { display: inline-flex; align-items: center; gap: 14px; padding: 22px 32px; background: var(--paper); color: var(--ink); text-decoration: none; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; font-weight: 500; transition: transform .25s; cursor: none; }
+.launch-cta:hover { transform: translateX(8px); }
+.launch-cta-arrow { font-size: 18px; line-height: 1; }
+.launch-foot { font-size: 10px; letter-spacing: 2px; opacity: .55; max-width: 360px; line-height: 1.7; }
+.launch-foot a { color: var(--paper); border-bottom: 1px dashed rgba(255,255,255,0.4); text-decoration: none; }
+.launch-foot a:hover { opacity: .8; }
+
+/* ─── KEEP CA / TIER STYLES (used elsewhere) — already defined above ─── */
 .ck-text {
   font-size: 10px; line-height: 1.7; max-width: 640px;
   color: rgba(255,255,255,0.65);
@@ -725,13 +816,63 @@ footer { padding: 0; }
   .sig-search-wrap { width: 100%; min-width: 0; }
   .band-right { width: 100%; flex-wrap: wrap; }
 }
+
+/* ─── RESPONSIVE: new components ─── */
+@media (max-width: 1100px) {
+  .launch-title { font-size: 64px; }
+  .launch-left, .launch-right { padding: 60px 40px; }
+  .agent-stage { height: 420px; padding: 0 24px; }
+  .alc-cell { padding: 24px; }
+  .alc-num { font-size: 28px; }
+}
+@media (max-width: 900px) {
+  .hero-canvas-wrap { min-height: 360px; border-left: none; border-top: var(--em); }
+  .hero-stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats-strip .hss-cell:nth-child(2) { border-right: none; }
+  .hero-stats-strip .hss-cell:nth-child(1), .hero-stats-strip .hss-cell:nth-child(2) { border-bottom: var(--em); }
+  .launch-grid { grid-template-columns: 1fr; }
+  .launch-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .launch-title { font-size: 56px; }
+  .agent-legend-grid { grid-template-columns: repeat(2, 1fr); }
+  .alc-cell:nth-child(2) { border-right: none; }
+  .alc-cell:nth-child(1), .alc-cell:nth-child(2) { border-bottom: var(--em); }
+  .agent-stage { height: 380px; }
+  .net-stats { display: none; }
+  .launch-banner { font-size: 9px; gap: 12px; padding: 0 12px; }
+  .launch-banner .lb-cd { display: none; }
+}
+@media (max-width: 640px) {
+  .launch-title { font-size: 44px; }
+  .launch-cd-n { font-size: 42px; }
+  .launch-cd-wrap { gap: 22px; }
+  .launch-left, .launch-right { padding: 48px 24px; }
+  .launch-meta { grid-template-columns: 1fr; gap: 16px; }
+  .agent-legend-grid { grid-template-columns: 1fr; }
+  .alc-cell { border-right: none !important; border-bottom: var(--em) !important; }
+  .alc-cell:last-child { border-bottom: none !important; }
+  .agent-stage { height: 320px; padding: 0 16px; }
+  .hero-stats-strip .hss-n { font-size: 32px; }
+  .hero-stats-strip .hss-cell { padding: 20px 18px; }
+  .hero-canvas-wrap { min-height: 280px; }
+  .launch-banner { letter-spacing: 2px; }
+  .launch-banner > span:nth-child(2) { display: none; }
+}
 </style>
 </head>
-<body>
+<body class="lb-on">
 
 <div id="cur"></div>
 <div id="cur-ring"></div>
 <div class="toast" id="toast">Copied</div>
+
+<!-- LAUNCH BANNER -->
+<div class="launch-banner" id="launchBanner">
+  <span class="lb-pulse"></span>
+  <span>$SIGNAL launching today on</span>
+  <a class="lb-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">kickstart.easya.io →</a>
+  <span class="lb-cd" id="lbCd">Live now</span>
+  <button class="lb-close" id="lbClose" aria-label="Dismiss">×</button>
+</div>
 
 <!-- TICKER -->
 <div class="ticker-bar">
@@ -760,66 +901,73 @@ footer { padding: 0; }
   <a href="#hero" class="nav-logo">ArtSignal <span class="dot"></span></a>
   <ul class="nav-links">
     <li><a href="#signals">Signals</a></li>
+    <li><a href="#agents">Network</a></li>
     <li><a href="#howitworks">Protocol</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#tokenomics">$SIGNAL</a></li>
+    <li><a href="#launch">Launch</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
   <div class="nav-right">
-    <button class="nav-cta mag" onclick="scrollTo('#community')">Join Alpha</button>
+    <a class="nav-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">Buy $SIGNAL</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <nav class="mob-menu" id="mobMenu">
   <a href="#signals" onclick="closeMob()">Signals</a>
+  <a href="#agents" onclick="closeMob()">Network</a>
   <a href="#howitworks" onclick="closeMob()">Protocol</a>
   <a href="#roadmap" onclick="closeMob()">Roadmap</a>
-  <a href="#tokenomics" onclick="closeMob()">$SIGNAL</a>
+  <a href="#launch" onclick="closeMob()">Launch</a>
   <a href="#about" onclick="closeMob()">About</a>
   <a href="#faq" onclick="closeMob()">FAQ</a>
-  <a href="#community" onclick="closeMob()">Join Alpha</a>
+  <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" onclick="closeMob()">Buy $SIGNAL ↗</a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-left">
-    <div class="hero-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence</div>
+    <div class="hero-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence · 4 agents online</div>
     <h1 class="rv" style="transition-delay:.1s">Read<br><em>the</em><br>Chain.</h1>
     <p class="hero-sub rv" style="transition-delay:.2s">
-      The sharpest NFT, meme coin &amp; project intelligence on Solana.
-      <strong>Early signals. No noise.</strong>
-      We track on-chain data, community momentum, and narrative shifts so you move first.
+      An autonomous network of on-chain agents reading every Solana wallet,
+      DEX route and social pulse — distilled into one conviction score.
+      <strong>Early signal. Zero noise.</strong>
     </p>
     <div class="hero-actions rv" style="transition-delay:.3s">
       <a href="#signals" class="btn btn-fill mag">Live Signals</a>
-      <a href="#howitworks" class="btn btn-ghost mag">How it works</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-stats rv" style="transition-delay:.2s">
-      <div class="stat-box">
-        <span class="stat-n" data-to="847">0</span>
-        <span class="stat-l">Signals Issued</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-n" data-to="68" data-suffix="%">0</span>
-        <span class="stat-l">Win Rate</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-n" data-to="4200" data-suffix="+">0</span>
-        <span class="stat-l">Alpha Members</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-n" data-to="312" data-suffix="%">0</span>
-        <span class="stat-l">Avg Return</span>
-      </div>
+      <a href="#agents" class="btn btn-ghost mag">See the Network</a>
     </div>
     <blockquote class="hero-quote rv" style="transition-delay:.35s">
-      "The signal is in the chain.<br>Everything else is noise."
+      "The signal is in the chain. Everything else is noise."
     </blockquote>
   </div>
+  <div class="hero-right">
+    <div class="hero-canvas-wrap">
+      <canvas id="netCanvas" aria-label="Live signal constellation"></canvas>
+      <div class="net-stats">
+        <div class="ns-cell"><div class="ns-n" id="nsNodes">0</div><div class="ns-l">Signals</div></div>
+        <div class="ns-cell"><div class="ns-n" id="nsLinks">0</div><div class="ns-l">Edges</div></div>
+      </div>
+      <div class="net-hover" id="netHover">
+        <div class="nh-asset">—</div>
+        <div class="nh-meta">—</div>
+      </div>
+      <div class="net-legend">
+        <span>// Live constellation · drag to interact</span>
+        <span id="netClock">SOL · 00:00 UTC</span>
+      </div>
+    </div>
+  </div>
   <div class="hero-scroll"><span class="scroll-arrow">↓</span> Scroll to explore</div>
+</section>
+
+<!-- HERO STATS STRIP -->
+<section class="hero-stats-strip">
+  <div class="hss-cell"><div class="hss-n"><span class="stat-n" data-to="847">0</span></div><div class="hss-l">Signals Issued</div></div>
+  <div class="hss-cell"><div class="hss-n"><span class="stat-n" data-to="68" data-suffix="%">0</span></div><div class="hss-l">Win Rate</div></div>
+  <div class="hss-cell"><div class="hss-n"><span class="stat-n" data-to="4200" data-suffix="+">0</span></div><div class="hss-l">Alpha Members</div></div>
+  <div class="hss-cell"><div class="hss-n"><span class="stat-n" data-to="312" data-suffix="%">0</span></div><div class="hss-l">Avg Return</div></div>
 </section>
 
 <!-- SIGNALS -->
@@ -909,6 +1057,90 @@ footer { padding: 0; }
       <tr class="empty-row"><td colspan="7">No signals match — try a different filter.</td></tr>
     </tbody>
   </table>
+</section>
+
+<!-- AGENT NETWORK -->
+<section id="agents">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// Multi-Agent Intelligence</div>
+      <h2 class="sec-title rv">The Agent<br><em>Network.</em></h2>
+    </div>
+    <p class="sec-desc rv" style="transition-delay:.1s">
+      Four autonomous agents — each specialised, each adversarial, each verifiable on-chain.
+      They negotiate, challenge and rate every signal before a human ever sees it.
+    </p>
+  </div>
+  <div class="agent-stage">
+    <svg class="agent-svg" id="agentSvg" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="agArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="#0A0A0A"/>
+        </marker>
+      </defs>
+      <g id="agLinks"></g>
+      <g id="agNodes">
+        <g class="ag-node" data-id="crawler" transform="translate(140,140)">
+          <circle class="agent-node-ring" r="36"/>
+          <circle class="agent-node-circle" r="36"/>
+          <text class="agent-label" y="-50">CRAWLER</text>
+          <text class="agent-label-sub" y="62">Indexer · Solana RPC</text>
+        </g>
+        <g class="ag-node" data-id="sentiment" transform="translate(860,140)">
+          <circle class="agent-node-ring" r="36"/>
+          <circle class="agent-node-circle" r="36"/>
+          <text class="agent-label" y="-50">SENTIMENT</text>
+          <text class="agent-label-sub" y="62">X · Discord · Telegram</text>
+        </g>
+        <g class="ag-node" data-id="scorer" transform="translate(140,360)">
+          <circle class="agent-node-ring" r="36"/>
+          <circle class="agent-node-circle" r="36"/>
+          <text class="agent-label" y="-50">SCORER</text>
+          <text class="agent-label-sub" y="62">ML · 14 features</text>
+        </g>
+        <g class="ag-node" data-id="conviction" transform="translate(860,360)">
+          <circle class="agent-node-ring" r="36"/>
+          <circle class="agent-node-circle" r="36"/>
+          <text class="agent-label" y="-50">CONVICTION</text>
+          <text class="agent-label-sub" y="62">Adversary · Final call</text>
+        </g>
+        <g class="ag-node" data-id="oracle" transform="translate(500,250)">
+          <circle class="agent-node-ring" r="44"/>
+          <circle class="agent-node-circle" r="44" style="fill:var(--ink)"/>
+          <text class="agent-label" y="-58" style="fill:var(--ink)">$SIGNAL</text>
+          <text class="agent-label-sub" y="70" style="fill:var(--mid)">Consensus oracle</text>
+          <text x="0" y="6" text-anchor="middle" style="font:italic 18px 'Instrument Serif';fill:var(--paper)">◈</text>
+        </g>
+      </g>
+    </svg>
+    <div class="agent-msg" id="agMsg">message</div>
+  </div>
+  <div class="agent-legend-grid">
+    <div class="alc-cell" data-id="crawler">
+      <div class="alc-num">01</div>
+      <div class="alc-name">Crawler</div>
+      <div class="alc-desc">Streams every block from Solana, decodes SPL transfers, DEX swaps and NFT trades. Tags whale wallets across 280K addresses.</div>
+      <div class="alc-stat">~ 4,200 tx/sec indexed</div>
+    </div>
+    <div class="alc-cell" data-id="sentiment">
+      <div class="alc-num">02</div>
+      <div class="alc-name">Sentiment</div>
+      <div class="alc-desc">Reads X, Discord and Telegram in real time. Detects coordinated chatter, KOL pivots and narrative formation before price moves.</div>
+      <div class="alc-stat">1.4M posts / 24h scanned</div>
+    </div>
+    <div class="alc-cell" data-id="scorer">
+      <div class="alc-num">03</div>
+      <div class="alc-name">Scorer</div>
+      <div class="alc-desc">Combines 14 on-chain and social features into a raw conviction score. Continuously back-tested against the live signal log.</div>
+      <div class="alc-stat">Model v3.2 · F1 = 0.81</div>
+    </div>
+    <div class="alc-cell" data-id="conviction">
+      <div class="alc-num">04</div>
+      <div class="alc-name">Conviction</div>
+      <div class="alc-desc">An adversarial agent that tries to falsify the score. Only signals that survive the challenge are published — the rest are killed silently.</div>
+      <div class="alc-stat">Kill rate: 71% of candidates</div>
+    </div>
+  </div>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -1025,109 +1257,40 @@ footer { padding: 0; }
   </div>
 </section>
 
-<!-- TOKENOMICS -->
-<section id="tokenomics">
-  <div class="section-head">
-    <div>
-      <div class="sec-eyebrow">// $SIGNAL Token</div>
-      <h2 class="sec-title rv">Token<em>omics</em></h2>
-    </div>
-    <p class="sec-desc rv" style="transition-delay:.1s">100M total supply. Utility-first. No speculation. Revenue sharing for stakers.</p>
-  </div>
-  <div class="token-body">
-    <div class="token-left">
-      <div class="distrib" id="distrib">
-        <div class="distrib-row rv" data-w="35">
-          <div class="dr-pct">35%</div>
-          <div class="dr-info">
-            <div class="dr-label">Community Rewards</div>
-            <div class="dr-amt">35,000,000 $SIGNAL</div>
-          </div>
-          <div class="dr-bar"><div class="dr-bar-fill" data-w="35"></div></div>
-        </div>
-        <div class="distrib-row rv" style="transition-delay:.05s" data-w="20">
-          <div class="dr-pct">20%</div>
-          <div class="dr-info">
-            <div class="dr-label">Ecosystem &amp; Grants</div>
-            <div class="dr-amt">20,000,000 $SIGNAL</div>
-          </div>
-          <div class="dr-bar"><div class="dr-bar-fill" data-w="20"></div></div>
-        </div>
-        <div class="distrib-row rv" style="transition-delay:.1s">
-          <div class="dr-pct">20%</div>
-          <div class="dr-info">
-            <div class="dr-label">Development Fund</div>
-            <div class="dr-amt">20,000,000 $SIGNAL</div>
-          </div>
-          <div class="dr-bar"><div class="dr-bar-fill" data-w="20"></div></div>
-        </div>
-        <div class="distrib-row rv" style="transition-delay:.15s">
-          <div class="dr-pct">15%</div>
-          <div class="dr-info">
-            <div class="dr-label">Team (4yr vest)</div>
-            <div class="dr-amt">15,000,000 $SIGNAL</div>
-          </div>
-          <div class="dr-bar"><div class="dr-bar-fill" data-w="15"></div></div>
-        </div>
-        <div class="distrib-row rv" style="transition-delay:.2s">
-          <div class="dr-pct">10%</div>
-          <div class="dr-info">
-            <div class="dr-label">Reserve</div>
-            <div class="dr-amt">10,000,000 $SIGNAL</div>
-          </div>
-          <div class="dr-bar"><div class="dr-bar-fill" data-w="10"></div></div>
-        </div>
+<!-- LAUNCH -->
+<section id="launch">
+  <div class="launch-grid">
+    <div class="launch-left">
+      <div>
+        <div class="launch-eyebrow"><span class="le-dot"></span> $SIGNAL · Launch Day · 30 April 2026</div>
+        <h2 class="launch-title">Today<br><em>we go</em><br>live.</h2>
+        <p class="launch-sub">
+          $SIGNAL is the access and consensus token for the ArtSignal agent network.
+          Stake to receive real-time alerts, unlock the API, and earn a share of network revenue.
+          The token launches today on EasyA Kickstart — direct allocation, no insiders, no team unlock at TGE.
+        </p>
+      </div>
+      <div class="launch-meta">
+        <div class="lm-row"><div class="lm-k">Network</div><div class="lm-v">Solana · SPL</div></div>
+        <div class="lm-row"><div class="lm-k">Total Supply</div><div class="lm-v">100,000,000</div></div>
+        <div class="lm-row"><div class="lm-k">Launchpad</div><div class="lm-v">EasyA Kickstart</div></div>
+        <div class="lm-row"><div class="lm-k">TGE Unlock</div><div class="lm-v">Public 100% · Team 0%</div></div>
       </div>
     </div>
-    <div class="token-right rv" style="transition-delay:.1s">
-      <div class="token-info">
-        <div class="ti-block">
-          <div class="ti-title">Token Details</div>
-          <div class="ti-rows">
-            <div class="ti-row"><span class="ti-k">Total Supply</span><span class="ti-v">100,000,000</span></div>
-            <div class="ti-row"><span class="ti-k">Network</span><span class="ti-v">Solana (SPL)</span></div>
-            <div class="ti-row"><span class="ti-k">Revenue Share</span><span class="ti-v">70% to stakers</span></div>
-            <div class="ti-row"><span class="ti-k">Burn Mechanism</span><span class="ti-v">10% fees/month</span></div>
-            <div class="ti-row"><span class="ti-k">Next Snapshot</span><span class="ti-v" id="tgeLabel">Counting…</span></div>
-          </div>
-          <div class="countdown" id="countdown">
-            <div class="cd-label">Snapshot in</div>
-            <div class="cd-cell"><div class="cd-n" id="cdD">00</div><div class="cd-l">Days</div></div>
-            <div class="cd-cell"><div class="cd-n" id="cdH">00</div><div class="cd-l">Hours</div></div>
-            <div class="cd-cell"><div class="cd-n" id="cdM">00</div><div class="cd-l">Mins</div></div>
-            <div class="cd-cell"><div class="cd-n" id="cdS">00</div><div class="cd-l">Secs</div></div>
-          </div>
-          <div class="ca-row">
-            <span class="ca-addr" id="caAddr">artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL</span>
-            <button class="ca-btn" onclick="copyCA()">Copy CA</button>
-          </div>
-        </div>
-        <div class="ti-block">
-          <div class="ti-title">Access Tiers</div>
-          <div class="tier-grid">
-            <div class="tier-card">
-              <div class="tc-name">Scout</div>
-              <div class="tc-req">Free</div>
-              <div class="tc-desc">Delayed signals (2hr lag)</div>
-            </div>
-            <div class="tier-card">
-              <div class="tc-name">Alpha</div>
-              <div class="tc-req">5K $SIGNAL</div>
-              <div class="tc-desc">Real-time NFT signals</div>
-            </div>
-            <div class="tier-card">
-              <div class="tc-name">Insider</div>
-              <div class="tc-req">25K $SIGNAL</div>
-              <div class="tc-desc">Pre-signal intel + API</div>
-            </div>
-            <div class="tier-card">
-              <div class="tc-name">Whale</div>
-              <div class="tc-req">100K $SIGNAL</div>
-              <div class="tc-desc">Direct analyst access</div>
-            </div>
-          </div>
-        </div>
+    <div class="launch-right">
+      <div class="launch-status"><span class="ls-dot"></span><span id="launchStatus">Counting down to launch</span></div>
+      <div class="launch-cd-wrap" id="launchCdWrap">
+        <div class="launch-cd-cell"><div class="launch-cd-n" id="lcH">00</div><div class="launch-cd-l">Hours</div></div>
+        <div class="launch-cd-cell"><div class="launch-cd-n" id="lcM">00</div><div class="launch-cd-l">Minutes</div></div>
+        <div class="launch-cd-cell"><div class="launch-cd-n" id="lcS">00</div><div class="launch-cd-l">Seconds</div></div>
       </div>
+      <a class="launch-cta mag" href="https://kickstart.easya.io/" target="_blank" rel="noopener">
+        Launch on Kickstart <span class="launch-cta-arrow">→</span>
+      </a>
+      <p class="launch-foot">
+        Allocation opens in waves. Read the <a href="whitepaper.html">whitepaper</a> &amp;
+        <a href="disclaimer.html">risk disclosure</a> before participating. Not financial advice.
+      </p>
     </div>
   </div>
 </section>
@@ -1219,7 +1382,8 @@ footer { padding: 0; }
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Do I need to hold $SIGNAL tokens to access signals?</span><span class="faq-ic">+</span></button><div class="faq-a">Free tier (Scout) receives delayed signals publicly. Real-time signals and NFT intelligence require staking a minimum of 5,000 $SIGNAL (Alpha tier). Higher tiers unlock pre-signal intelligence and direct analyst access.</div></div>
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">What's your historical win rate?</span><span class="faq-ic">+</span></button><div class="faq-a">Since private alpha in Q4 2024, ArtSignal has issued 847 signals with a 68.3% win rate (signals that hit at least 20% gain before stop loss). Full historical data including bad calls is published monthly on our public dashboard and logged on Solana.</div></div>
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Is this financial advice?</span><span class="faq-ic">+</span></button><div class="faq-a">No. ArtSignal provides on-chain intelligence for informational purposes only. Nothing constitutes financial or investment advice. Always DYOR and never invest more than you can afford to lose.</div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">When is the $SIGNAL TGE?</span><span class="faq-ic">+</span></button><div class="faq-a">The Token Generation Event is planned for Q2 2025 on Jupiter LFG launchpad. Whitelist spots are allocated to waitlist members first. Join the alpha waitlist to secure priority access.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">When and where does $SIGNAL launch?</span><span class="faq-ic">+</span></button><div class="faq-a">$SIGNAL launches <strong>today (30 April 2026)</strong> on <a href="https://kickstart.easya.io/" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px dashed currentColor">EasyA Kickstart</a>. Public allocation opens in waves; there is no team unlock at TGE. Read the whitepaper and risk disclosure before participating.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">How do the four agents actually talk to each other?</span><span class="faq-ic">+</span></button><div class="faq-a">Each agent runs as a separate process and writes its output to a shared message bus. The Crawler emits raw on-chain events. Sentiment emits weighted social vectors. The Scorer consumes both and proposes a candidate signal. The Conviction agent then attempts to falsify it — only signals that survive are written to the on-chain signal log via the consensus oracle.</div></div>
   </div>
   </div>
 </section>
@@ -1235,9 +1399,10 @@ footer { padding: 0; }
       <h4>Navigate</h4>
       <ul>
         <li><a href="#signals">Live Signals</a></li>
+        <li><a href="#agents">Agent Network</a></li>
         <li><a href="#howitworks">Protocol</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
-        <li><a href="#tokenomics">$SIGNAL</a></li>
+        <li><a href="#launch">$SIGNAL Launch</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
@@ -1587,6 +1752,424 @@ function ckSet(mode){
   try{
     if(!localStorage.getItem('as_cookie_decided')){ setTimeout(ckShow,1400); }
   }catch(e){ setTimeout(ckShow,1400); }
+})();
+
+// ── LAUNCH BANNER (close + countdown to today's launch)
+(function(){
+  const bar=document.getElementById('launchBanner');
+  const close=document.getElementById('lbClose');
+  const cd=document.getElementById('lbCd');
+  if(!bar) return;
+  // dismiss state
+  try{
+    if(localStorage.getItem('as_lb_dismissed')==='1'){
+      bar.style.display='none';
+      document.body.classList.remove('lb-on');
+      return;
+    }
+  }catch(e){}
+  if(close) close.addEventListener('click',()=>{
+    bar.style.display='none';
+    document.body.classList.remove('lb-on');
+    try{ localStorage.setItem('as_lb_dismissed','1'); }catch(e){}
+  });
+  // tick: launch target = today 18:00 UTC; if past, "Live now"
+  function lbTick(){
+    if(!cd) return;
+    const now=new Date();
+    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 18, 0, 0));
+    let diff=target.getTime()-Date.now();
+    if(diff<=0){ cd.textContent='Live now ◆'; return; }
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    cd.textContent='Goes live in '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' UTC';
+  }
+  lbTick(); setInterval(lbTick,1000);
+})();
+
+// ── LAUNCH SECTION COUNTDOWN (same target = today 18:00 UTC)
+(function(){
+  const eH=document.getElementById('lcH'), eM=document.getElementById('lcM'), eS=document.getElementById('lcS');
+  const status=document.getElementById('launchStatus');
+  const wrap=document.getElementById('launchCdWrap');
+  if(!eH) return;
+  function tick(){
+    const now=new Date();
+    const target=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 18, 0, 0));
+    let diff=target.getTime()-Date.now();
+    if(diff<=0){
+      eH.textContent='LIVE'; eM.textContent='◆'; eS.textContent='NOW';
+      if(wrap){ wrap.style.fontVariantNumeric='normal'; }
+      if(status) status.textContent='Live now — buy on EasyA Kickstart';
+      return;
+    }
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    eH.textContent=String(h).padStart(2,'0');
+    eM.textContent=String(m).padStart(2,'0');
+    eS.textContent=String(s).padStart(2,'0');
+    if(status) status.textContent='Goes live at 18:00 UTC today';
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+// ── HERO CONSTELLATION CANVAS
+(function(){
+  const c=document.getElementById('netCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  const wrap=c.parentElement;
+  const hover=document.getElementById('netHover');
+  const nsNodes=document.getElementById('nsNodes');
+  const nsLinks=document.getElementById('nsLinks');
+  const clock=document.getElementById('netClock');
+
+  const ASSETS=[
+    {a:'BONK',t:'meme',s:7.6},{a:'WIF',t:'meme',s:6.2},{a:'POPCAT',t:'meme',s:6.8},
+    {a:'PENGU',t:'meme',s:7.2},{a:'JUP',t:'project',s:7.1},{a:'JTO',t:'project',s:6.5},
+    {a:'PYTH',t:'project',s:7.4},{a:'DRIFT',t:'project',s:6.9},{a:'MAD LADS',t:'nft',s:9.2},
+    {a:'DEGODS',t:'nft',s:3.1},{a:'TENSORIANS',t:'nft',s:6.7},{a:'CLAYNOSAURZ',t:'nft',s:7.9},
+    {a:'FLOOR',t:'nft',s:5.4},{a:'ORE',t:'project',s:6.1},{a:'KMNO',t:'project',s:7.3},
+    {a:'GLITCH',t:'project',s:8.9},{a:'MEW',t:'meme',s:5.8},{a:'CHILLGUY',t:'meme',s:6.4},
+    {a:'GOAT',t:'meme',s:7.7},{a:'MOTHER',t:'meme',s:5.9},{a:'PNUT',t:'meme',s:6.6},
+    {a:'AI16Z',t:'project',s:8.1},{a:'GRIFFAIN',t:'project',s:7.5},{a:'SLERF',t:'meme',s:4.2},
+    {a:'BOME',t:'meme',s:5.6},{a:'BACKPACK',t:'project',s:7.8},{a:'HELIUM',t:'project',s:6.0},
+    {a:'NEON',t:'project',s:5.2},{a:'BERN',t:'meme',s:4.8},{a:'DRAGONIN',t:'nft',s:6.3}
+  ];
+
+  let W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+  let nodes=[];
+  let mouse={x:-9999,y:-9999,inside:false,dragging:false};
+  let grabbed=null;
+  let hovered=null;
+
+  function resize(){
+    const r=wrap.getBoundingClientRect();
+    W=r.width; H=r.height;
+    c.width=W*DPR; c.height=H*DPR;
+    c.style.width=W+'px'; c.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    initNodes();
+  }
+  function initNodes(){
+    nodes=ASSETS.map((d,i)=>{
+      const r=4 + (d.s/10)*7;
+      return {
+        ...d, r,
+        x: 40 + Math.random()*(W-80),
+        y: 40 + Math.random()*(H-80),
+        vx: (Math.random()-0.5)*0.25,
+        vy: (Math.random()-0.5)*0.25,
+        ox: 0, oy: 0
+      };
+    });
+    nodes.forEach(n=>{n.ox=n.x;n.oy=n.y;});
+  }
+  function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); }
+  function step(){
+    // physics
+    let edges=0;
+    nodes.forEach(n=>{
+      // wander
+      n.vx+=(Math.random()-0.5)*0.04;
+      n.vy+=(Math.random()-0.5)*0.04;
+      // damping
+      n.vx*=0.96; n.vy*=0.96;
+      // weak spring back to origin
+      n.vx+=(n.ox-n.x)*0.0008;
+      n.vy+=(n.oy-n.y)*0.0008;
+      // mouse repulsion (gentle)
+      if(mouse.inside){
+        const dx=n.x-mouse.x, dy=n.y-mouse.y;
+        const d2=dx*dx+dy*dy;
+        if(d2<14400){ // within 120px
+          const d=Math.sqrt(d2)||1;
+          const f=(1-d/120)*0.6;
+          n.vx+=(dx/d)*f;
+          n.vy+=(dy/d)*f;
+        }
+      }
+      n.x+=n.vx; n.y+=n.vy;
+      // bounds
+      if(n.x<n.r) {n.x=n.r; n.vx*=-0.4;}
+      if(n.x>W-n.r) {n.x=W-n.r; n.vx*=-0.4;}
+      if(n.y<n.r) {n.y=n.r; n.vy*=-0.4;}
+      if(n.y>H-n.r) {n.y=H-n.r; n.vy*=-0.4;}
+    });
+    if(grabbed){
+      grabbed.x+=(mouse.x-grabbed.x)*0.35;
+      grabbed.y+=(mouse.y-grabbed.y)*0.35;
+      grabbed.vx=0; grabbed.vy=0;
+    }
+    // draw
+    ctx.clearRect(0,0,W,H);
+    // edges
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const d=dist(nodes[i],nodes[j]);
+        if(d<140){
+          const a=(1-d/140)*0.45;
+          ctx.strokeStyle=`rgba(10,10,10,${a*0.55})`;
+          ctx.lineWidth=0.7;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.stroke();
+          edges++;
+        }
+      }
+    }
+    // hover edge from cursor
+    if(mouse.inside && hovered){
+      ctx.strokeStyle='rgba(10,10,10,0.6)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([2,3]);
+      ctx.beginPath();
+      ctx.moveTo(mouse.x,mouse.y);
+      ctx.lineTo(hovered.x,hovered.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // nodes
+    nodes.forEach(n=>{
+      const isHover=(n===hovered);
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      // fill if score >= 7 (bull-ish) or hover
+      if(n.s>=7 || isHover){
+        ctx.fillStyle='#0A0A0A';
+        ctx.fill();
+      } else {
+        ctx.fillStyle='rgba(242,240,235,1)';
+        ctx.fill();
+        ctx.lineWidth=1.2;
+        ctx.strokeStyle='#0A0A0A';
+        ctx.stroke();
+      }
+      if(isHover){
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,n.r+5,0,Math.PI*2);
+        ctx.strokeStyle='rgba(10,10,10,0.5)';
+        ctx.lineWidth=1;
+        ctx.stroke();
+      }
+    });
+    if(nsNodes) nsNodes.textContent=nodes.length;
+    if(nsLinks) nsLinks.textContent=edges;
+    requestAnimationFrame(step);
+  }
+  function findNearest(){
+    let best=null, bd=22*22;
+    for(const n of nodes){
+      const dx=n.x-mouse.x, dy=n.y-mouse.y;
+      const d2=dx*dx+dy*dy;
+      if(d2<bd){ bd=d2; best=n; }
+    }
+    return best;
+  }
+  c.addEventListener('mouseenter',()=>{ mouse.inside=true; });
+  c.addEventListener('mouseleave',()=>{
+    mouse.inside=false; mouse.x=-9999; mouse.y=-9999;
+    hovered=null;
+    if(hover) hover.classList.remove('on');
+  });
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;
+    mouse.y=e.clientY-r.top;
+    hovered=findNearest();
+    if(hovered && hover){
+      hover.classList.add('on');
+      hover.querySelector('.nh-asset').textContent=hovered.a;
+      hover.querySelector('.nh-meta').textContent=hovered.t.toUpperCase()+' · score '+hovered.s.toFixed(1)+' / 10';
+    } else if(hover){
+      hover.classList.remove('on');
+    }
+  });
+  c.addEventListener('mousedown',e=>{
+    grabbed=hovered;
+    if(grabbed) c.style.cursor='grabbing';
+  });
+  window.addEventListener('mouseup',()=>{
+    if(grabbed){
+      // restore origin gently
+      grabbed.ox=grabbed.x; grabbed.oy=grabbed.y;
+    }
+    grabbed=null;
+    c.style.cursor='none';
+  });
+  // touch support
+  c.addEventListener('touchstart',e=>{
+    if(e.touches.length){
+      const t=e.touches[0];
+      const r=c.getBoundingClientRect();
+      mouse.x=t.clientX-r.left; mouse.y=t.clientY-r.top; mouse.inside=true;
+      hovered=findNearest(); grabbed=hovered;
+    }
+  },{passive:true});
+  c.addEventListener('touchmove',e=>{
+    if(e.touches.length){
+      const t=e.touches[0];
+      const r=c.getBoundingClientRect();
+      mouse.x=t.clientX-r.left; mouse.y=t.clientY-r.top;
+    }
+  },{passive:true});
+  c.addEventListener('touchend',()=>{ grabbed=null; mouse.inside=false; });
+
+  resize();
+  window.addEventListener('resize',resize);
+  step();
+
+  // hero clock
+  if(clock){
+    function clk(){
+      const d=new Date();
+      const hh=String(d.getUTCHours()).padStart(2,'0');
+      const mm=String(d.getUTCMinutes()).padStart(2,'0');
+      const ss=String(d.getUTCSeconds()).padStart(2,'0');
+      clock.textContent='SOL · '+hh+':'+mm+':'+ss+' UTC';
+    }
+    clk(); setInterval(clk,1000);
+  }
+})();
+
+// ── AGENT NETWORK SVG ANIMATION
+(function(){
+  const svg=document.getElementById('agentSvg');
+  if(!svg) return;
+  const linksLayer=document.getElementById('agLinks');
+  const nodesLayer=document.getElementById('agNodes');
+  const msgEl=document.getElementById('agMsg');
+  const stage=svg.parentElement;
+
+  // node positions match transform translate above
+  const POS={
+    crawler:[140,140], sentiment:[860,140],
+    scorer:[140,360], conviction:[860,360],
+    oracle:[500,250]
+  };
+  // directional links: from→to with message
+  const LINKS=[
+    {f:'crawler', t:'scorer',     m:'tx + wallet flow'},
+    {f:'crawler', t:'oracle',     m:'on-chain proof'},
+    {f:'sentiment', t:'scorer',   m:'social vector'},
+    {f:'sentiment', t:'conviction', m:'KOL signal'},
+    {f:'scorer', t:'conviction',  m:'candidate score'},
+    {f:'conviction', t:'oracle',  m:'final signal'},
+    {f:'crawler', t:'sentiment',  m:'wallet→handle map'},
+    {f:'oracle', t:'crawler',     m:'feedback loop'}
+  ];
+
+  // draw static link paths (curved)
+  LINKS.forEach((l,i)=>{
+    const [x1,y1]=POS[l.f], [x2,y2]=POS[l.t];
+    const mx=(x1+x2)/2, my=(y1+y2)/2;
+    const dx=x2-x1, dy=y2-y1;
+    // perpendicular offset for curve
+    const nx=-dy, ny=dx;
+    const len=Math.sqrt(nx*nx+ny*ny)||1;
+    const cx=mx + (nx/len)*40, cy=my + (ny/len)*40;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}`);
+    path.setAttribute('class','agent-link');
+    path.setAttribute('id','agLink'+i);
+    linksLayer.appendChild(path);
+    l._path=path;
+    l._pathLen=path.getTotalLength();
+  });
+
+  // pulse element pool
+  const pulses=[];
+  function makePulse(){
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('r','3.5');
+    dot.setAttribute('class','agent-pulse-dot');
+    nodesLayer.appendChild(dot);
+    return dot;
+  }
+
+  function showMsg(node, text){
+    if(!msgEl) return;
+    const [px,py]=POS[node];
+    const stageRect=stage.getBoundingClientRect();
+    const svgRect=svg.getBoundingClientRect();
+    const sx=svgRect.left + (px/1000)*svgRect.width - stageRect.left;
+    const sy=svgRect.top  + (py/480)*svgRect.height - stageRect.top - 70;
+    msgEl.style.left=sx+'px';
+    msgEl.style.top=sy+'px';
+    msgEl.textContent=text;
+    msgEl.classList.add('show');
+    clearTimeout(showMsg._t);
+    showMsg._t=setTimeout(()=>msgEl.classList.remove('show'),1400);
+  }
+
+  function highlightNode(id, on){
+    const n=document.querySelector(`g.ag-node[data-id="${id}"]`);
+    if(!n) return;
+    const c=n.querySelector('.agent-node-circle');
+    const ring=n.querySelector('.agent-node-ring');
+    if(c && id!=='oracle'){ c.classList.toggle('active', on); }
+    if(on && ring){
+      ring.classList.remove('pulse');
+      // force reflow then add
+      void ring.getBoundingClientRect();
+      ring.classList.add('pulse');
+    }
+  }
+
+  function fireLink(idx){
+    const l=LINKS[idx]; if(!l) return;
+    const dot=makePulse();
+    const path=l._path; const len=l._pathLen;
+    const dur=1100 + Math.random()*400;
+    const start=performance.now();
+    highlightNode(l.f, true);
+    setTimeout(()=>highlightNode(l.f,false), 350);
+    l._path.classList.add('active');
+    showMsg(l.f, l.m);
+    function tick(now){
+      const p=Math.min((now-start)/dur,1);
+      const pt=path.getPointAtLength(p*len);
+      dot.setAttribute('cx',pt.x);
+      dot.setAttribute('cy',pt.y);
+      if(p<1){ requestAnimationFrame(tick); }
+      else {
+        dot.remove();
+        l._path.classList.remove('active');
+        highlightNode(l.t, true);
+        setTimeout(()=>highlightNode(l.t,false), 600);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // sequence scheduler
+  let seqIdx=0;
+  function loop(){
+    fireLink(seqIdx % LINKS.length);
+    seqIdx++;
+    setTimeout(loop, 850 + Math.random()*400);
+  }
+  // start when section in view
+  const obs=new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ loop(); obs.disconnect(); } });
+  },{threshold:.2});
+  obs.observe(svg);
+
+  // legend cell hover → highlight matching node
+  document.querySelectorAll('.alc-cell').forEach(cell=>{
+    cell.addEventListener('mouseenter',()=>{
+      const id=cell.dataset.id;
+      highlightNode(id, true);
+      // fire all outgoing links from that node
+      LINKS.forEach((l,i)=>{ if(l.f===id) setTimeout(()=>fireLink(i), Math.random()*200); });
+    });
+    cell.addEventListener('mouseleave',()=>{
+      highlightNode(cell.dataset.id, false);
+    });
+  });
 })();
 </script>
 </body>
