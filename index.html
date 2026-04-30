@@ -150,15 +150,40 @@ nav {
 /* ─── HERO ─── */
 #hero {
   min-height: 100vh; padding-top: 80px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: end;
+  display: flex; flex-direction: column;
   border-bottom: var(--em);
   position: relative; overflow: hidden;
 }
+.hero-canvas-top {
+  position: relative;
+  height: 56vh; min-height: 440px; max-height: 640px;
+  border-bottom: var(--em);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(10,10,10,0.04) 1px, transparent 1px) 0 0/100% 80px,
+    linear-gradient(90deg, rgba(10,10,10,0.04) 1px, transparent 1px) 0 0/80px 100%;
+}
+.hero-canvas-top #netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: none; }
+.hero-canvas-top .net-stats { position: absolute; top: 16px; right: 24px; }
+.hero-canvas-top .net-legend { position: absolute; bottom: 16px; left: 24px; right: 24px; display: flex; justify-content: space-between; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); pointer-events: none; }
+.hero-canvas-top .hct-overlay {
+  position: absolute; top: 24px; left: 24px;
+  display: flex; flex-direction: column; gap: 10px; z-index: 2; pointer-events: none;
+  max-width: 50%;
+}
+.hero-canvas-top .hct-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
+}
+.hero-content {
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: end;
+  flex: 1;
+}
 .hero-left {
-  padding: 80px 40px 60px;
+  padding: 60px 40px 60px;
   border-right: var(--em);
-  display: flex; flex-direction: column; justify-content: flex-end; gap: 32px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 28px;
 }
 .hero-tag {
   font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
@@ -193,9 +218,33 @@ h1 em { font-style: italic; color: var(--mid); }
 .btn-ghost { border-color: var(--ink); color: var(--ink); background: transparent; }
 .btn-ghost:hover { background: var(--ink); color: var(--paper); }
 .hero-right {
-  padding: 80px 40px 60px;
-  display: flex; flex-direction: column; justify-content: flex-end; gap: 40px;
+  padding: 60px 40px 60px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 28px;
 }
+.hero-watch .hw-label {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
+  border-bottom: 1px solid var(--line); padding-bottom: 12px;
+}
+.hero-watch .hw-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.hero-watch .hw-row {
+  display: grid; grid-template-columns: 14px 1fr auto auto; align-items: center; gap: 14px;
+  padding: 14px 0; border-bottom: 1px dashed var(--line);
+  font-size: 11px; transition: padding-left .25s ease, color .25s ease;
+}
+.hero-watch .hw-row:hover { padding-left: 8px; }
+.hero-watch .hw-row:last-child { border-bottom: none; }
+.hero-watch .hw-tick { color: var(--mid); font-size: 10px; transition: color .25s, transform .25s; }
+.hero-watch .hw-row:hover .hw-tick { color: var(--ink); transform: translateX(4px); }
+.hero-watch .hw-asset { font-weight: 500; letter-spacing: .5px; }
+.hero-watch .hw-score {
+  font-family: 'Instrument Serif', serif; font-size: 22px; font-style: italic;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.hero-watch .hw-tag {
+  font-size: 8px; letter-spacing: 2px; color: var(--mid);
+  border: 1px solid var(--line); padding: 4px 8px;
+}
+.hero-watch .hw-row:hover .hw-tag { border-color: var(--ink); color: var(--ink); }
 .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: var(--em); }
 .stat-box {
   background: var(--paper); padding: 24px 20px;
@@ -633,16 +682,13 @@ footer { padding: 0; }
 body.lb-on .ticker-bar { top: 32px; }
 body.lb-on nav { top: 60px; }
 
-/* ─── HERO CANVAS ─── */
-.hero-canvas-wrap { position: relative; height: 100%; min-height: 520px; border-left: var(--em); overflow: hidden; }
-#netCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: none; }
-.net-legend { position: absolute; bottom: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: flex-end; pointer-events: none; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); z-index: 2; }
+/* ─── HERO CANVAS (shared overlay styles) ─── */
 .net-legend span { background: rgba(242,240,235,0.85); padding: 4px 8px; backdrop-filter: blur(4px); }
-.net-hover { position: absolute; top: 16px; left: 16px; background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 3; }
+.net-hover { position: absolute; top: 60px; left: 24px; background: var(--ink); color: var(--paper); padding: 10px 14px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 3; }
 .net-hover.on { opacity: 1; }
 .net-hover .nh-asset { font-size: 13px; letter-spacing: 1.5px; margin-bottom: 4px; }
 .net-hover .nh-meta { opacity: .65; font-size: 9px; }
-.net-stats { position: absolute; top: 16px; right: 16px; display: flex; gap: 0; z-index: 2; pointer-events: none; }
+.net-stats { display: flex; gap: 0; z-index: 2; pointer-events: none; }
 .net-stats .ns-cell { padding: 8px 14px; background: rgba(242,240,235,0.85); border: 1px solid var(--ink); border-left: none; }
 .net-stats .ns-cell:first-child { border-left: 1px solid var(--ink); }
 .net-stats .ns-n { font-size: 16px; font-variant-numeric: tabular-nums; }
@@ -759,8 +805,8 @@ body.lb-on nav { top: 60px; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
-  #hero { grid-template-columns: 1fr; }
-  .hero-right { border-top: var(--em); }
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-left { border-right: none; border-bottom: var(--em); }
   .how-grid { grid-template-columns: 1fr 1fr; }
   .token-body { grid-template-columns: 1fr; }
   .token-left { border-right: none; border-bottom: var(--em); }
@@ -775,6 +821,9 @@ body.lb-on nav { top: 60px; }
   .nav-right .nav-cta { display: none; }
   .hamburger { display: flex; }
   #hero { padding-top: 80px; }
+  .hero-canvas-top { height: 50vh; min-height: 320px; }
+  .hero-canvas-top .hct-overlay { max-width: 80%; top: 16px; left: 16px; }
+  .hero-canvas-top .net-legend { bottom: 10px; left: 16px; right: 16px; font-size: 8px; }
   .hero-left, .hero-right { padding: 40px 20px; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .section-band { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -826,7 +875,7 @@ body.lb-on nav { top: 60px; }
   .alc-num { font-size: 28px; }
 }
 @media (max-width: 900px) {
-  .hero-canvas-wrap { min-height: 360px; border-left: none; border-top: var(--em); }
+  .hero-canvas-top { height: 52vh; min-height: 380px; }
   .hero-stats-strip { grid-template-columns: repeat(2, 1fr); }
   .hero-stats-strip .hss-cell:nth-child(2) { border-right: none; }
   .hero-stats-strip .hss-cell:nth-child(1), .hero-stats-strip .hss-cell:nth-child(2) { border-bottom: var(--em); }
@@ -853,7 +902,7 @@ body.lb-on nav { top: 60px; }
   .agent-stage { height: 320px; padding: 0 16px; }
   .hero-stats-strip .hss-n { font-size: 32px; }
   .hero-stats-strip .hss-cell { padding: 20px 18px; }
-  .hero-canvas-wrap { min-height: 280px; }
+  .hero-canvas-top { min-height: 300px; height: 45vh; }
   .launch-banner { letter-spacing: 2px; }
   .launch-banner > span:nth-child(2) { display: none; }
 }
@@ -926,37 +975,50 @@ body.lb-on nav { top: 60px; }
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-left">
-    <div class="hero-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence · 4 agents online</div>
-    <h1 class="rv" style="transition-delay:.1s">Read<br><em>the</em><br>Chain.</h1>
-    <p class="hero-sub rv" style="transition-delay:.2s">
-      An autonomous network of on-chain agents reading every Solana wallet,
-      DEX route and social pulse — distilled into one conviction score.
-      <strong>Early signal. Zero noise.</strong>
-    </p>
-    <div class="hero-actions rv" style="transition-delay:.3s">
-      <a href="#signals" class="btn btn-fill mag">Live Signals</a>
-      <a href="#agents" class="btn btn-ghost mag">See the Network</a>
+  <!-- FULL-WIDTH ANIMATED CONSTELLATION AT TOP -->
+  <div class="hero-canvas-top">
+    <canvas id="netCanvas" aria-label="Live signal constellation"></canvas>
+    <div class="hct-overlay">
+      <div class="hct-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence · 4 agents online</div>
     </div>
-    <blockquote class="hero-quote rv" style="transition-delay:.35s">
-      "The signal is in the chain. Everything else is noise."
-    </blockquote>
+    <div class="net-stats">
+      <div class="ns-cell"><div class="ns-n" id="nsNodes">0</div><div class="ns-l">Signals</div></div>
+      <div class="ns-cell"><div class="ns-n" id="nsLinks">0</div><div class="ns-l">Edges</div></div>
+    </div>
+    <div class="net-hover" id="netHover">
+      <div class="nh-asset">—</div>
+      <div class="nh-meta">—</div>
+    </div>
+    <div class="net-legend">
+      <span>// Live constellation · drag · hover · feel the chain</span>
+      <span id="netClock">SOL · 00:00 UTC</span>
+    </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-canvas-wrap">
-      <canvas id="netCanvas" aria-label="Live signal constellation"></canvas>
-      <div class="net-stats">
-        <div class="ns-cell"><div class="ns-n" id="nsNodes">0</div><div class="ns-l">Signals</div></div>
-        <div class="ns-cell"><div class="ns-n" id="nsLinks">0</div><div class="ns-l">Edges</div></div>
+  <!-- TEXT BELOW -->
+  <div class="hero-content">
+    <div class="hero-left">
+      <h1 class="rv" style="transition-delay:.1s">Read<br><em>the</em><br>Chain.</h1>
+      <p class="hero-sub rv" style="transition-delay:.2s">
+        An autonomous network of on-chain agents reading every Solana wallet,
+        DEX route and social pulse — distilled into one conviction score.
+        <strong>Early signal. Zero noise.</strong>
+      </p>
+      <div class="hero-actions rv" style="transition-delay:.3s">
+        <a href="#signals" class="btn btn-fill mag">Live Signals</a>
+        <a href="#agents" class="btn btn-ghost mag">See the Network</a>
       </div>
-      <div class="net-hover" id="netHover">
-        <div class="nh-asset">—</div>
-        <div class="nh-meta">—</div>
-      </div>
-      <div class="net-legend">
-        <span>// Live constellation · drag to interact</span>
-        <span id="netClock">SOL · 00:00 UTC</span>
-      </div>
+    </div>
+    <div class="hero-right hero-watch">
+      <div class="hw-label rv">// Now Watching</div>
+      <ul class="hw-list">
+        <li class="hw-row rv" style="transition-delay:.1s"><span class="hw-tick">▸</span><span class="hw-asset">$GLITCH</span><span class="hw-score">8.9</span><span class="hw-tag">NEW SIGNAL</span></li>
+        <li class="hw-row rv" style="transition-delay:.15s"><span class="hw-tick">▸</span><span class="hw-asset">$WIF</span><span class="hw-score">7.4</span><span class="hw-tag">ACCUMULATING</span></li>
+        <li class="hw-row rv" style="transition-delay:.2s"><span class="hw-tick">▸</span><span class="hw-asset">$POPCAT</span><span class="hw-score">6.8</span><span class="hw-tag">SOCIAL SPIKE</span></li>
+        <li class="hw-row rv" style="transition-delay:.25s"><span class="hw-tick">▸</span><span class="hw-asset">MAD&nbsp;LADS</span><span class="hw-score">8.2</span><span class="hw-tag">FLOOR SWEEP</span></li>
+      </ul>
+      <blockquote class="hero-quote rv" style="transition-delay:.35s">
+        "The signal is in the chain. Everything else is noise."
+      </blockquote>
     </div>
   </div>
   <div class="hero-scroll"><span class="scroll-arrow">↓</span> Scroll to explore</div>
