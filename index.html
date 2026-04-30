@@ -1514,14 +1514,16 @@ const statsObs=new IntersectionObserver(entries=>{
       statsObs.unobserve(e.target);
     }
   });
-},{threshold:.5});
-statsObs.observe(document.querySelector('.hero-stats'));
+},{threshold:.3});
+document.querySelectorAll('.hero-stats, .hero-stats-strip').forEach(el=>statsObs.observe(el));
 
 // ── SCROLL REVEAL
 const rvObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('vis'); rvObs.unobserve(e.target); } });
-},{threshold:.1});
+},{threshold:.05});
 document.querySelectorAll('.rv,.rv-l').forEach(el=>rvObs.observe(el));
+// safety: force-reveal everything after 1.5s no matter what
+setTimeout(()=>document.querySelectorAll('.rv,.rv-l').forEach(el=>el.classList.add('vis')),1500);
 
 // ── PROGRESS BARS
 const barObs=new IntersectionObserver(entries=>{
