@@ -2,11 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArtSignal — Read the Chain</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ArtSignal — Read the Chain · Solana Signal Intelligence</title>
+<meta name="description" content="The sharpest NFT, meme coin and project intelligence on Solana. Early on-chain signals, transparent track record, no noise. Join 4,200+ alpha members.">
+<meta name="keywords" content="solana, nft signals, crypto signals, on-chain intelligence, alpha, $SIGNAL, artsignal, memecoin">
+<meta name="author" content="ArtSignal Labs">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="canonical" href="https://artsignal.fun/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://artsignal.fun/">
+<meta property="og:title" content="ArtSignal — Read the Chain">
+<meta property="og:description" content="On-chain signal intelligence for Solana. Early NFT, meme and project alpha — before the crowd finds out.">
+<meta property="og:site_name" content="ArtSignal">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ArtSignal — Read the Chain">
+<meta name="twitter:description" content="On-chain signal intelligence for Solana. 847 signals · 68% win rate · 4,200+ alpha members.">
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23F2F0EB'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23F2F0EB'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Editorial+New:ital@0;1&family=Neue+Montreal:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -530,6 +548,124 @@ footer { padding: 0; }
 /* ─── MAGNETIC BUTTON ─── */
 .mag { transition: transform .3s cubic-bezier(.25,1,.5,1); }
 
+/* ─── SIGNAL SEARCH ─── */
+.sig-search-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 12px; min-width: 180px;
+}
+.sig-search-wrap svg { width: 11px; height: 11px; opacity: .5; flex-shrink: 0; }
+.sig-search {
+  background: none; border: none; outline: none; color: #fff;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; flex: 1; min-width: 0;
+}
+.sig-search::placeholder { color: rgba(255,255,255,0.3); }
+.signal-table th.sortable { cursor: none; user-select: none; transition: color .2s; }
+.signal-table th.sortable:hover { color: var(--ink); }
+.signal-table th.sortable::after {
+  content: ' ↕'; opacity: .25; font-size: 9px;
+}
+.signal-table th.sort-asc::after { content: ' ↑'; opacity: 1; }
+.signal-table th.sort-desc::after { content: ' ↓'; opacity: 1; }
+.signal-row.no-match { display: none !important; }
+.empty-row td {
+  padding: 60px 40px; text-align: center; color: var(--mid);
+  font-family: 'Instrument Serif', serif; font-size: 18px; font-style: italic;
+}
+
+/* ─── SPARKLINE ─── */
+.spark { display: inline-block; vertical-align: middle; margin-left: 8px; }
+.spark path { stroke: var(--ink); stroke-width: 1; fill: none; transition: stroke .2s; }
+.signal-row:hover .spark path { stroke: var(--ink); stroke-width: 1.5; }
+
+/* ─── COUNTDOWN ─── */
+.countdown {
+  margin-top: 24px; border: var(--em); padding: 0;
+  display: grid; grid-template-columns: auto repeat(4, 1fr);
+  align-items: stretch; overflow: hidden;
+}
+.cd-label {
+  padding: 14px 18px; background: var(--ink); color: var(--paper);
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+}
+.cd-label::before {
+  content: ''; width: 5px; height: 5px; background: #fff; border-radius: 50%;
+  animation: blink-dot 1.5s step-end infinite;
+}
+.cd-cell {
+  padding: 14px 8px; text-align: center;
+  border-right: var(--em);
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+  background: var(--paper);
+}
+.cd-cell:last-child { border-right: none; }
+.cd-n {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px; line-height: 1; letter-spacing: -1px; font-variant-numeric: tabular-nums;
+}
+.cd-l { font-size: 7px; letter-spacing: 2px; color: var(--mid); text-transform: uppercase; }
+
+/* ─── COOKIE BANNER ─── */
+.cookie-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: var(--ink); color: var(--paper);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 18px 40px;
+  display: none; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap;
+  transform: translateY(100%); transition: transform .5s cubic-bezier(.25,1,.5,1);
+}
+.cookie-bar.show { display: flex; }
+.cookie-bar.in { transform: translateY(0); }
+.ck-text {
+  font-size: 10px; line-height: 1.7; max-width: 640px;
+  color: rgba(255,255,255,0.65);
+}
+.ck-text strong { color: #fff; font-weight: 500; }
+.ck-text a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.ck-text a:hover { opacity: .7; }
+.ck-actions { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+.ck-btn {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  padding: 11px 18px; cursor: none; border: 1px solid rgba(255,255,255,0.2);
+  background: transparent; color: #fff; transition: all .2s;
+}
+.ck-btn:hover { border-color: #fff; }
+.ck-btn.primary { background: #fff; color: var(--ink); border-color: #fff; }
+.ck-btn.primary:hover { opacity: .85; }
+
+/* ─── BACK TO TOP ─── */
+.totop {
+  position: fixed; bottom: 32px; right: 32px; z-index: 90;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  border: none; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  opacity: 0; pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity .25s, transform .25s, background .2s;
+}
+.totop.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.totop:hover { background: #333; }
+
+/* ─── CONFETTI ─── */
+.confetti-piece {
+  position: fixed; width: 6px; height: 8px; z-index: 998;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ─── PROGRESS BAR (TOP) ─── */
+.scroll-progress {
+  position: fixed; top: 28px; left: 0; height: 1px;
+  background: var(--ink); width: 0; z-index: 100;
+  transition: width .1s linear;
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 900px) {
   #hero { grid-template-columns: 1fr; }
@@ -579,6 +715,15 @@ footer { padding: 0; }
   #cur, #cur-ring { display: none; }
   * { cursor: auto; }
   a, button { cursor: pointer !important; }
+  .cookie-bar { padding: 14px 20px; gap: 12px; }
+  .ck-text { font-size: 10px; }
+  .ck-actions { width: 100%; }
+  .ck-btn { flex: 1; }
+  .countdown { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .cd-label { grid-column: 1 / -1; justify-content: center; }
+  .totop { bottom: 16px; right: 16px; }
+  .sig-search-wrap { width: 100%; min-width: 0; }
+  .band-right { width: 100%; flex-wrap: wrap; }
 }
 </style>
 </head>
@@ -682,6 +827,10 @@ footer { padding: 0; }
   <div class="section-band">
     <span class="band-label">// Live Intelligence Feed</span>
     <div class="band-right">
+      <div class="sig-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" class="sig-search" id="sigSearch" placeholder="Search asset…" aria-label="Search signals">
+      </div>
       <button class="filter-btn on" onclick="filterSig('all',this)">All</button>
       <button class="filter-btn" onclick="filterSig('nft',this)">NFT</button>
       <button class="filter-btn" onclick="filterSig('meme',this)">Meme</button>
@@ -694,67 +843,70 @@ footer { padding: 0; }
         <th>Type</th>
         <th>Asset</th>
         <th>Analysis</th>
-        <th>Score</th>
+        <th class="sortable" data-sort="score">Score</th>
         <th>Change</th>
-        <th>Conviction</th>
-        <th>Age</th>
+        <th class="sortable" data-sort="conviction">Conviction</th>
+        <th class="sortable sort-asc" data-sort="age">Age</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="signal-row rv" data-cat="nft">
+      <tr class="signal-row rv" data-cat="nft" data-score="9.2" data-conv="92" data-agemin="4">
         <td data-show><span class="sig-type sig-bull">Bull</span></td>
         <td data-show><div class="sig-name">Mad Lads</div><div class="sig-ticker">#NFT · Solana</div></td>
         <td><div class="sig-desc">Floor sweep incoming. Whale wallets accumulating. Volume spike 280% over 24h. Social sentiment flipping bullish after Backpack ecosystem announcement.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">9.2</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">9.2</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 16 L8 14 L16 12 L24 13 L32 9 L40 6 L48 4 L60 2"/></svg></div></td>
         <td data-show><span class="sig-val pos">+280% vol</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="92"></div></div></div></td>
         <td><span class="sig-age">4m ago</span></td>
       </tr>
-      <tr class="signal-row rv" data-cat="meme">
+      <tr class="signal-row rv" data-cat="meme" data-score="6.8" data-conv="68" data-agemin="12">
         <td data-show><span class="sig-type sig-watch">Watch</span></td>
         <td data-show><div class="sig-name">$POPCAT</div><div class="sig-ticker">#Meme · pump.fun</div></td>
         <td><div class="sig-desc">Consolidating above key support. KOL chatter increasing on X. Major influencer hinting new campaign. Hold support at $0.38 or invalidate.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">6.8</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">6.8</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 10 L8 12 L16 8 L24 11 L32 9 L40 10 L48 7 L60 8"/></svg></div></td>
         <td data-show><span class="sig-val pos">+12.4%</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="68"></div></div></div></td>
         <td><span class="sig-age">12m ago</span></td>
       </tr>
-      <tr class="signal-row rv" data-cat="project">
+      <tr class="signal-row rv" data-cat="project" data-score="8.9" data-conv="89" data-agemin="28">
         <td data-show><span class="sig-type sig-bull">Early</span></td>
         <td data-show><div class="sig-name">Glitch Protocol</div><div class="sig-ticker">$GLITCH · Pre-launch</div></td>
         <td><div class="sig-desc">Stealth launch. On-chain activity suggests coordinated accumulation. Dev wallets from 2 prior 100x projects. AI + DeFi on SVM narrative.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">8.9</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">8.9</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 18 L8 17 L16 15 L24 14 L32 10 L40 8 L48 5 L60 3"/></svg></div></td>
         <td data-show><span class="sig-val">Pre-TGE</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="89"></div></div></div></td>
         <td><span class="sig-age">28m ago</span></td>
       </tr>
-      <tr class="signal-row rv" data-cat="nft">
+      <tr class="signal-row rv" data-cat="nft" data-score="3.1" data-conv="31" data-agemin="60">
         <td data-show><span class="sig-type sig-bear">Caution</span></td>
         <td data-show><div class="sig-name">DeGods</div><div class="sig-ticker">#NFT · Solana</div></td>
         <td><div class="sig-desc">Insider sell pressure visible. Floor declining below 200 SOL psychological support. Team wallet movement flagged. Community fragile.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">3.1</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">3.1</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 4 L8 6 L16 8 L24 9 L32 11 L40 13 L48 15 L60 17"/></svg></div></td>
         <td data-show><span class="sig-val neg">−42% vol</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="31"></div></div></div></td>
         <td><span class="sig-age">1h ago</span></td>
       </tr>
-      <tr class="signal-row rv" data-cat="meme">
+      <tr class="signal-row rv" data-cat="meme" data-score="7.6" data-conv="76" data-agemin="120">
         <td data-show><span class="sig-type sig-bull">Bull</span></td>
         <td data-show><div class="sig-name">$BONK</div><div class="sig-ticker">#Meme · Solana OG</div></td>
         <td><div class="sig-desc">Breakout pattern forming on 4H chart. Key resistance at $0.000034. BONK DAO treasury buyback confirmed. CEX listing rumor gaining traction.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">7.6</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">7.6</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 14 L8 13 L16 11 L24 12 L32 9 L40 7 L48 6 L60 5"/></svg></div></td>
         <td data-show><span class="sig-val pos">+8.1%</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="76"></div></div></div></td>
         <td><span class="sig-age">2h ago</span></td>
       </tr>
-      <tr class="signal-row rv" data-cat="project">
+      <tr class="signal-row rv" data-cat="project" data-score="7.1" data-conv="71" data-agemin="180">
         <td data-show><span class="sig-type sig-watch">Watch</span></td>
         <td data-show><div class="sig-name">Jupiter</div><div class="sig-ticker">$JUP · DeFi Infra</div></td>
         <td><div class="sig-desc">Q2 airdrop snapshot approaching. LP incentives increasing. New perps product gaining traction. Volume market share 34% of all Solana DEX.</div></td>
-        <td><div class="sig-score-wrap"><div class="sig-score">7.1</div><div class="sig-score-label">/ 10</div></div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">7.1</div><div class="sig-score-label">/ 10</div><svg class="spark" width="60" height="20" viewBox="0 0 60 20"><path d="M0 12 L8 11 L16 10 L24 11 L32 10 L40 9 L48 9 L60 8"/></svg></div></td>
         <td data-show><span class="sig-val pos">+1.7%</span></td>
         <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="71"></div></div></div></td>
         <td><span class="sig-age">3h ago</span></td>
       </tr>
+    </tbody>
+    <tbody id="sigEmpty" style="display:none">
+      <tr class="empty-row"><td colspan="7">No signals match — try a different filter.</td></tr>
     </tbody>
   </table>
 </section>
@@ -936,7 +1088,14 @@ footer { padding: 0; }
             <div class="ti-row"><span class="ti-k">Network</span><span class="ti-v">Solana (SPL)</span></div>
             <div class="ti-row"><span class="ti-k">Revenue Share</span><span class="ti-v">70% to stakers</span></div>
             <div class="ti-row"><span class="ti-k">Burn Mechanism</span><span class="ti-v">10% fees/month</span></div>
-            <div class="ti-row"><span class="ti-k">TGE</span><span class="ti-v">Q2 2025 · Jupiter LFG</span></div>
+            <div class="ti-row"><span class="ti-k">Next Snapshot</span><span class="ti-v" id="tgeLabel">Counting…</span></div>
+          </div>
+          <div class="countdown" id="countdown">
+            <div class="cd-label">Snapshot in</div>
+            <div class="cd-cell"><div class="cd-n" id="cdD">00</div><div class="cd-l">Days</div></div>
+            <div class="cd-cell"><div class="cd-n" id="cdH">00</div><div class="cd-l">Hours</div></div>
+            <div class="cd-cell"><div class="cd-n" id="cdM">00</div><div class="cd-l">Mins</div></div>
+            <div class="cd-cell"><div class="cd-n" id="cdS">00</div><div class="cd-l">Secs</div></div>
           </div>
           <div class="ca-row">
             <span class="ca-addr" id="caAddr">artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL</span>
@@ -981,9 +1140,9 @@ footer { padding: 0; }
       ArtSignal members received early signals on <strong>Mad Lads at 30 SOL</strong>, <strong>$WIF at $0.08</strong>, and <strong>$BONK pre-CEX listing</strong>. Join 4,200+ traders reading the chain before the crowd.
     </p>
     <div class="social-row rv" style="transition-delay:.2s">
-      <a class="soc-card" href="#"><div class="soc-icon">✈</div><div class="soc-n">4.2K</div><div class="soc-label">Telegram</div></a>
-      <a class="soc-card" href="#"><div class="soc-icon">◈</div><div class="soc-n">3.1K</div><div class="soc-label">Discord</div></a>
-      <a class="soc-card" href="#"><div class="soc-icon">𝕏</div><div class="soc-n">18K</div><div class="soc-label">Twitter</div></a>
+      <a class="soc-card" href="https://t.me/artsignalfun" target="_blank" rel="noopener"><div class="soc-icon">✈</div><div class="soc-n">4.2K</div><div class="soc-label">Telegram</div></a>
+      <a class="soc-card" href="https://discord.gg/artsignal" target="_blank" rel="noopener"><div class="soc-icon">◈</div><div class="soc-n">3.1K</div><div class="soc-label">Discord</div></a>
+      <a class="soc-card" href="https://x.com/artsignalfun" target="_blank" rel="noopener"><div class="soc-icon">𝕏</div><div class="soc-n">18K</div><div class="soc-label">Twitter</div></a>
     </div>
     <div class="email-row rv" style="transition-delay:.3s">
       <input type="email" class="email-in" id="emailIn" placeholder="your@email.com">
@@ -1086,20 +1245,50 @@ footer { padding: 0; }
     <div class="foot-col">
       <h4>Community</h4>
       <ul>
-        <li><a href="#">Telegram Alpha</a></li>
-        <li><a href="#">Discord Server</a></li>
-        <li><a href="#">Twitter / X</a></li>
-        <li><a href="#">Signal Dashboard</a></li>
-        <li><a href="#">Track Record</a></li>
-        <li><a href="#">Terms of Use</a></li>
+        <li><a href="https://t.me/artsignalfun" target="_blank" rel="noopener">Telegram Alpha</a></li>
+        <li><a href="https://discord.gg/artsignal" target="_blank" rel="noopener">Discord Server</a></li>
+        <li><a href="https://x.com/artsignalfun" target="_blank" rel="noopener">Twitter / X</a></li>
+        <li><a href="#signals">Signal Dashboard</a></li>
+        <li><a href="whitepaper.html">Whitepaper</a></li>
+        <li><a href="mailto:hello@artsignal.fun">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-top" style="grid-template-columns:1fr;border-top:var(--em);border-bottom:none">
+    <div class="foot-col" style="border-right:none;padding:32px 40px">
+      <h4>Legal</h4>
+      <ul style="flex-direction:row;flex-wrap:wrap;gap:24px">
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms of Use</a></li>
+        <li><a href="cookies.html">Cookie Policy</a></li>
+        <li><a href="disclaimer.html">Disclaimer</a></li>
+        <li><a href="whitepaper.html">Whitepaper</a></li>
       </ul>
     </div>
   </div>
   <div class="foot-bottom">
-    <span class="foot-copy">© 2025 ArtSignal · artsignal.fun · Not financial advice. DYOR.</span>
+    <span class="foot-copy">© 2026 ArtSignal · artsignal.fun · Not financial advice. DYOR.</span>
     <span class="foot-built">Built on Solana</span>
   </div>
 </footer>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-bar" id="cookieBar" role="dialog" aria-label="Cookie consent">
+  <div class="ck-text">
+    <strong>We use cookies</strong> to make ArtSignal work, measure usage, and improve. Strictly-necessary cookies are always on; analytics &amp; marketing are off by default. Read our <a href="cookies.html">Cookie Policy</a> &amp; <a href="privacy.html">Privacy Policy</a>.
+  </div>
+  <div class="ck-actions">
+    <button class="ck-btn" onclick="ckSet('reject')">Reject all</button>
+    <button class="ck-btn" onclick="window.location='cookies.html'">Customize</button>
+    <button class="ck-btn primary" onclick="ckSet('accept')">Accept all</button>
+  </div>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="totop" id="totop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProg"></div>
 
 <script>
 // ── CURSOR
@@ -1130,7 +1319,14 @@ document.getElementById('hamburger').addEventListener('click',()=>{
   document.getElementById('mobMenu').classList.toggle('open');
 });
 function closeMob(){ document.getElementById('mobMenu').classList.remove('open'); }
-function scrollTo(sel){ document.querySelector(sel)?.scrollIntoView({behavior:'smooth'}); }
+function goTo(sel){ document.querySelector(sel)?.scrollIntoView({behavior:'smooth'}); }
+// keep legacy global used by inline onclick
+window.scrollTo = (function(orig){
+  return function(a,b){
+    if(typeof a==='string'){ return goTo(a); }
+    return orig.call(window, a, b);
+  };
+})(window.scrollTo);
 
 // ── COUNTER ANIMATION
 function countUp(el, to, suffix='', dur=1600){
@@ -1175,14 +1371,71 @@ const barObs=new IntersectionObserver(entries=>{
 },{threshold:.2});
 document.querySelectorAll('.signal-table,.distrib').forEach(el=>barObs.observe(el));
 
-// ── SIGNAL FILTER
+// ── SIGNAL FILTER + SEARCH (combined)
+let curFilter='all', curSearch='';
+function applySignals(){
+  const rows=document.querySelectorAll('.signal-row');
+  let visible=0;
+  rows.forEach(row=>{
+    const catOk=(curFilter==='all'||row.dataset.cat===curFilter);
+    const txt=(row.textContent||'').toLowerCase();
+    const searchOk=!curSearch||txt.includes(curSearch);
+    const show=catOk&&searchOk;
+    row.style.display=show?'':'none';
+    if(show) visible++;
+  });
+  const empty=document.getElementById('sigEmpty');
+  if(empty) empty.style.display=visible===0?'':'none';
+}
 function filterSig(cat,btn){
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
+  curFilter=cat; applySignals();
+}
+const ss=document.getElementById('sigSearch');
+if(ss){ ss.addEventListener('input',e=>{ curSearch=e.target.value.trim().toLowerCase(); applySignals(); }); }
+
+// ── SORT TABLE
+function parseAge(t){
+  const m=t.match(/(\d+)\s*([smhd])/i); if(!m) return 0;
+  const n=parseInt(m[1]), u=m[2].toLowerCase();
+  return u==='s'?n:u==='m'?n*60:u==='h'?n*3600:n*86400;
+}
+document.querySelectorAll('.signal-table th.sortable').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const sortKey=th.dataset.sort;
+    const asc=!th.classList.contains('sort-asc');
+    document.querySelectorAll('.signal-table th.sortable').forEach(o=>o.classList.remove('sort-asc','sort-desc'));
+    th.classList.add(asc?'sort-asc':'sort-desc');
+    const tbody=document.querySelector('.signal-table tbody');
+    const rows=Array.from(tbody.querySelectorAll('.signal-row'));
+    rows.sort((a,b)=>{
+      let va,vb;
+      if(sortKey==='score'){ va=parseFloat(a.dataset.score); vb=parseFloat(b.dataset.score); }
+      else if(sortKey==='conviction'){ va=parseFloat(a.dataset.conv); vb=parseFloat(b.dataset.conv); }
+      else if(sortKey==='age'){ va=parseFloat(a.dataset.agemin); vb=parseFloat(b.dataset.agemin); }
+      return asc? va-vb : vb-va;
+    });
+    rows.forEach(r=>tbody.appendChild(r));
+  });
+});
+
+// ── AUTO-INCREMENT AGE LABELS
+function fmtAge(min){
+  if(min<60) return Math.floor(min)+'m ago';
+  if(min<1440) return Math.floor(min/60)+'h ago';
+  return Math.floor(min/1440)+'d ago';
+}
+const ageStart=Date.now();
+function refreshAges(){
+  const elapsed=(Date.now()-ageStart)/60000;
   document.querySelectorAll('.signal-row').forEach(row=>{
-    row.style.display=(cat==='all'||row.dataset.cat===cat)?'':'none';
+    const base=parseFloat(row.dataset.agemin)||0;
+    const ageEl=row.querySelector('.sig-age');
+    if(ageEl) ageEl.textContent=fmtAge(base+elapsed);
   });
 }
+setInterval(refreshAges,30000);
 
 // ── FAQ
 function toggleFaq(btn){
@@ -1195,19 +1448,62 @@ function toggleFaq(btn){
   if(!open){ item.classList.add('open'); ans.classList.add('open'); }
 }
 
-// ── COPY CA
+// ── COPY CA + CONFETTI
 function copyCA(){
-  navigator.clipboard.writeText('artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL').catch(()=>{});
+  const addr='artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL';
+  if(navigator.clipboard){ navigator.clipboard.writeText(addr).catch(()=>{}); }
+  else{ const ta=document.createElement('textarea'); ta.value=addr; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} ta.remove(); }
   showToast('CA copied ✓');
+  confettiBurst();
+}
+function confettiBurst(){
+  const btn=document.querySelector('.ca-btn');
+  if(!btn) return;
+  const r=btn.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const colors=['#0A0A0A','#444','#888','#0A0A0A'];
+  for(let i=0;i<26;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.background=colors[i%colors.length];
+    p.style.left=cx+'px'; p.style.top=cy+'px';
+    document.body.appendChild(p);
+    const ang=Math.random()*Math.PI*2;
+    const vel=80+Math.random()*180;
+    const dx=Math.cos(ang)*vel, dy=Math.sin(ang)*vel - 80;
+    const rot=Math.random()*720-360;
+    p.animate([
+      {transform:'translate(0,0) rotate(0)',opacity:1},
+      {transform:`translate(${dx}px,${dy+200}px) rotate(${rot}deg)`,opacity:0}
+    ],{duration:1100+Math.random()*400,easing:'cubic-bezier(.2,.8,.4,1)'}).onfinish=()=>p.remove();
+  }
 }
 
-// ── JOIN WAITLIST
+// ── JOIN WAITLIST (with localStorage persistence)
 function joinWL(){
-  const v=document.getElementById('emailIn').value;
-  if(!v||!v.includes('@')){ showToast('Enter a valid email'); return; }
-  document.getElementById('emailIn').value='';
-  showToast('You\'re on the list ✓');
+  const inp=document.getElementById('emailIn');
+  const v=(inp.value||'').trim();
+  const re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!re.test(v)){ showToast('Enter a valid email'); inp.focus(); return; }
+  try{
+    const list=JSON.parse(localStorage.getItem('as_waitlist')||'[]');
+    if(!list.includes(v)) list.push(v);
+    localStorage.setItem('as_waitlist',JSON.stringify(list));
+    localStorage.setItem('as_waitlist_email',v);
+  }catch(e){}
+  inp.value=''; inp.placeholder='You\'re in. We\'ll be in touch.';
+  inp.disabled=true; inp.style.opacity='.5';
+  showToast('Welcome to alpha ✓');
+  confettiBurst();
 }
+// pre-fill if previously joined
+(function(){
+  try{
+    const prev=localStorage.getItem('as_waitlist_email');
+    const inp=document.getElementById('emailIn');
+    if(prev&&inp){ inp.placeholder='Already on the list ('+prev.replace(/(.{2}).+(@.+)/,'$1***$2')+')'; }
+  }catch(e){}
+})();
 
 // ── TOAST
 function showToast(msg){
@@ -1216,7 +1512,9 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('on'),2400);
 }
 
-// ── ACTIVE NAV
+// ── ACTIVE NAV + SCROLL PROGRESS + BACK TO TOP
+const totopBtn=document.getElementById('totop');
+const progBar=document.getElementById('scrollProg');
 window.addEventListener('scroll',()=>{
   let cur='';
   document.querySelectorAll('section[id]').forEach(s=>{
@@ -1224,10 +1522,72 @@ window.addEventListener('scroll',()=>{
   });
   document.querySelectorAll('.nav-links a').forEach(a=>{
     const isAct=a.getAttribute('href')==='#'+cur;
-    a.style.color=isAct?'var(--ink)':''
+    a.style.color=isAct?'var(--ink)':'';
     a.style.setProperty('--act',isAct?'1':'0');
   });
-});
+  // progress
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const p=h>0?(window.scrollY/h)*100:0;
+  if(progBar) progBar.style.width=p+'%';
+  // back to top
+  if(totopBtn) totopBtn.classList.toggle('show', window.scrollY>800);
+},{passive:true});
+
+// ── COUNTDOWN TO NEXT SNAPSHOT
+// pick the next 1st-of-month at 00:00 UTC as a stable snapshot date
+function nextSnapshot(){
+  const now=new Date();
+  const next=new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth()+1, 1, 0, 0, 0));
+  return next;
+}
+const cdTarget=nextSnapshot();
+const cdEls={d:document.getElementById('cdD'),h:document.getElementById('cdH'),m:document.getElementById('cdM'),s:document.getElementById('cdS')};
+const tgeLabel=document.getElementById('tgeLabel');
+function pad(n){ return String(Math.max(0,n)).padStart(2,'0'); }
+function tickCountdown(){
+  const diff=cdTarget.getTime()-Date.now();
+  if(diff<=0){ if(cdEls.d) cdEls.d.textContent='00'; if(cdEls.h) cdEls.h.textContent='00'; if(cdEls.m) cdEls.m.textContent='00'; if(cdEls.s) cdEls.s.textContent='00'; if(tgeLabel) tgeLabel.textContent='Live now'; return; }
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  if(cdEls.d) cdEls.d.textContent=pad(d);
+  if(cdEls.h) cdEls.h.textContent=pad(h);
+  if(cdEls.m) cdEls.m.textContent=pad(m);
+  if(cdEls.s) cdEls.s.textContent=pad(s);
+  if(tgeLabel){
+    const dt=cdTarget.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    tgeLabel.textContent=dt+' UTC';
+  }
+}
+tickCountdown();
+setInterval(tickCountdown,1000);
+
+// ── COOKIE BANNER
+function ckShow(){
+  const bar=document.getElementById('cookieBar');
+  bar.classList.add('show');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>bar.classList.add('in')));
+}
+function ckHide(){
+  const bar=document.getElementById('cookieBar');
+  bar.classList.remove('in');
+  setTimeout(()=>bar.classList.remove('show'),500);
+}
+function ckSet(mode){
+  const prefs=mode==='accept'?{func:true,ana:true,mkt:true}:{func:false,ana:false,mkt:false};
+  try{
+    localStorage.setItem('as_cookie_prefs',JSON.stringify(prefs));
+    localStorage.setItem('as_cookie_decided','1');
+  }catch(e){}
+  ckHide();
+  showToast(mode==='accept'?'Cookies accepted ✓':'Cookies rejected ✓');
+}
+(function(){
+  try{
+    if(!localStorage.getItem('as_cookie_decided')){ setTimeout(ckShow,1400); }
+  }catch(e){ setTimeout(ckShow,1400); }
+})();
 </script>
 </body>
 </html>

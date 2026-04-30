@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whitepaper — ArtSignal</title>
+<meta name="description" content="The ArtSignal protocol whitepaper: methodology, token design, and architecture.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23F2F0EB'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0A0A0A;--paper:#F2F0EB;--mid:#888;--line:rgba(0,0,0,0.1);--em:1px solid rgba(0,0,0,0.12)}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Mono',monospace;background:var(--paper);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{opacity:.6}
+nav{position:sticky;top:0;z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:rgba(242,240,235,.92);backdrop-filter:blur(16px);border-bottom:var(--em)}
+.nav-logo{font-family:'Instrument Serif',serif;font-size:20px;letter-spacing:-.5px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo .dot{width:6px;height:6px;background:var(--ink);border-radius:50%;display:inline-block;animation:blink 2s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-back{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mid);text-decoration:none}
+.nav-back:hover{color:var(--ink);opacity:1}
+header.page-h{padding:100px 40px 60px;border-bottom:var(--em);display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end}
+.eyebrow{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--mid);margin-bottom:16px}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(56px,8vw,108px);line-height:.92;letter-spacing:-2.5px;font-weight:400}
+h1 em{font-style:italic;color:var(--mid)}
+.head-right{font-size:11px;color:var(--mid);line-height:1.9;max-width:380px}
+.head-right strong{color:var(--ink)}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:var(--em);border-bottom:var(--em)}
+.meta-cell{padding:24px 32px;border-right:var(--em)}
+.meta-cell:last-child{border-right:none}
+.meta-l{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--mid);margin-bottom:8px}
+.meta-v{font-family:'Instrument Serif',serif;font-size:20px;letter-spacing:-.3px}
+main{flex:1;max-width:820px;padding:60px 40px 80px;width:100%;margin:0 auto}
+h2{font-family:'Instrument Serif',serif;font-size:32px;letter-spacing:-.5px;margin:56px 0 18px;font-weight:400}
+h2:first-child{margin-top:0}
+h2 .num{color:var(--mid);font-style:italic;margin-right:12px;font-size:24px}
+h3{font-family:'Instrument Serif',serif;font-size:20px;letter-spacing:-.3px;margin:32px 0 12px;font-weight:400;color:var(--ink)}
+p,li{font-size:13px;line-height:1.9;color:#333;margin-bottom:16px}
+ul,ol{padding-left:20px;margin-bottom:16px}
+li{margin-bottom:8px}
+strong{color:var(--ink);font-weight:500}
+em{color:var(--mid)}
+.formula{font-family:'DM Mono',monospace;background:var(--ink);color:var(--paper);padding:16px 20px;font-size:11px;line-height:1.8;margin:16px 0;overflow-x:auto;letter-spacing:.5px}
+.flow{border:var(--em);padding:0;margin:24px 0;display:grid;grid-template-columns:repeat(4,1fr)}
+.flow-step{padding:24px 20px;border-right:var(--em)}
+.flow-step:last-child{border-right:none}
+.flow-n{font-family:'Instrument Serif',serif;font-size:32px;letter-spacing:-1px;color:var(--mid);line-height:1}
+.flow-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:10px}
+.flow-d{font-size:10px;color:var(--mid);line-height:1.7;margin-top:8px}
+.toc{border:var(--em);padding:24px;margin-bottom:48px;background:rgba(0,0,0,.02)}
+.toc-title{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--mid);margin-bottom:14px}
+.toc ol{padding-left:18px}
+.toc li{font-size:11px;margin-bottom:6px}
+.toc a{text-decoration:none}
+.dl-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.dl-btn{font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:14px 24px;border:1px solid var(--ink);text-decoration:none;color:var(--ink);transition:all .2s}
+.dl-btn.primary{background:var(--ink);color:var(--paper)}
+.dl-btn:hover{opacity:.75}
+table{width:100%;border-collapse:collapse;border:var(--em);margin:16px 0}
+th,td{font-size:11px;padding:12px 16px;text-align:left;border-bottom:var(--em);line-height:1.6}
+th{background:var(--ink);color:var(--paper);font-weight:400;letter-spacing:2px;text-transform:uppercase;font-size:9px}
+tr:last-child td{border-bottom:none}
+footer{border-top:var(--em);padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:8px;letter-spacing:2px;color:var(--mid);text-transform:uppercase}
+footer a{color:var(--mid);text-decoration:none}
+footer a:hover{color:var(--ink)}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
+@media(max-width:900px){header.page-h{grid-template-columns:1fr;padding:60px 40px 40px}.meta-grid{grid-template-columns:1fr 1fr}.meta-cell:nth-child(2){border-right:none}.meta-cell:nth-child(1),.meta-cell:nth-child(2){border-bottom:var(--em)}.flow{grid-template-columns:1fr 1fr}.flow-step:nth-child(1),.flow-step:nth-child(2){border-bottom:var(--em)}.flow-step:nth-child(2){border-right:none}}
+@media(max-width:640px){nav{padding:0 20px}header.page-h{padding:60px 20px 30px}main{padding:40px 20px 60px}.meta-grid{grid-template-columns:1fr}.meta-cell{border-right:none;border-bottom:var(--em)}.meta-cell:last-child{border-bottom:none}.flow{grid-template-columns:1fr}.flow-step{border-right:none;border-bottom:var(--em)}.flow-step:last-child{border-bottom:none}footer{padding:20px;flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">ArtSignal <span class="dot"></span></a>
+  <a href="index.html" class="nav-back">← Back to home</a>
+</nav>
+
+<header class="page-h">
+  <div>
+    <div class="eyebrow">// Whitepaper · v1.2</div>
+    <h1>Read the<br><em>chain.</em></h1>
+  </div>
+  <div class="head-right">
+    <p><strong>ArtSignal</strong> is an on-chain intelligence protocol for the Solana ecosystem. This paper describes the methodology, the $SIGNAL token, and the architecture that turns raw blockchain noise into graded, actionable signals — accountable on-chain, owned by the community.</p>
+  </div>
+</header>
+
+<div class="meta-grid">
+  <div class="meta-cell"><div class="meta-l">Version</div><div class="meta-v">1.2</div></div>
+  <div class="meta-cell"><div class="meta-l">Network</div><div class="meta-v">Solana SPL</div></div>
+  <div class="meta-cell"><div class="meta-l">Supply</div><div class="meta-v">100,000,000</div></div>
+  <div class="meta-cell"><div class="meta-l">Pages</div><div class="meta-v">12</div></div>
+</div>
+
+<main>
+
+<div class="dl-row">
+  <a href="#" class="dl-btn primary" onclick="window.print();return false">Print version</a>
+  <a href="index.html#tokenomics" class="dl-btn">Token details →</a>
+  <a href="index.html#roadmap" class="dl-btn">Live roadmap →</a>
+</div>
+
+<div class="toc" style="margin-top:48px">
+  <div class="toc-title">Table of contents</div>
+  <ol>
+    <li><a href="#abstract">Abstract</a></li>
+    <li><a href="#problem">The problem</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#scoring">Conviction scoring</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#token">$SIGNAL token design</a></li>
+    <li><a href="#governance">Governance</a></li>
+    <li><a href="#accountability">Accountability layer</a></li>
+    <li><a href="#risks">Risks & mitigations</a></li>
+    <li><a href="#future">Future work</a></li>
+  </ol>
+</div>
+
+<h2 id="abstract"><span class="num">01</span>Abstract</h2>
+<p>Crypto markets are saturated with noise: anonymous shills, paid promotion, and survivor-bias storytelling. Real edge comes from on-chain truth — what wallets <em>do</em>, not what mouths say. ArtSignal builds that edge into a transparent, verifiable signal protocol. Every signal is logged on-chain. Every miss is publicly counted. Every analyst is accountable.</p>
+
+<h2 id="problem"><span class="num">02</span>The problem</h2>
+<p>The asymmetric-information problem in crypto is severe. Insiders, market-makers, and well-connected funds operate hours or days ahead of retail. The "alpha" most retail traders consume is downstream content: by the time it arrives, the move is over.</p>
+<ul>
+  <li><strong>Influencer bias:</strong> paid promotions disguised as conviction.</li>
+  <li><strong>Selection bias:</strong> winners loud, losers silent.</li>
+  <li><strong>Latency:</strong> social signals lag on-chain reality by 30-180 minutes on average.</li>
+  <li><strong>Verifiability:</strong> no public, immutable record of who called what, when.</li>
+</ul>
+
+<h2 id="methodology"><span class="num">03</span>Methodology</h2>
+<p>ArtSignal combines four primary inputs:</p>
+<div class="flow">
+  <div class="flow-step"><div class="flow-n">01</div><div class="flow-t">On-chain</div><div class="flow-d">Wallet flows, holder concentration, smart-money clustering, contract activity.</div></div>
+  <div class="flow-step"><div class="flow-n">02</div><div class="flow-t">Social</div><div class="flow-d">Cross-platform sentiment (X, Telegram, Discord) weighted by wallet-verified authors.</div></div>
+  <div class="flow-step"><div class="flow-n">03</div><div class="flow-t">Market</div><div class="flow-d">Liquidity, depth, slippage, DEX/CEX listings, derivatives positioning.</div></div>
+  <div class="flow-step"><div class="flow-n">04</div><div class="flow-t">Narrative</div><div class="flow-d">Sector momentum, attention windows, comparable-asset performance.</div></div>
+</div>
+
+<h2 id="scoring"><span class="num">04</span>Conviction scoring</h2>
+<p>Each candidate asset receives a <strong>conviction score from 1.0 to 10.0</strong>. Scoring is a weighted ensemble of model outputs, calibrated against three years of historical Solana market data.</p>
+<div class="formula">
+S = w₁·O(t) + w₂·M(t) + w₃·N(t) + w₄·R(t)
+where O = on-chain · M = momentum · N = narrative · R = risk-adjusted reversal
+weights are re-fit weekly via walk-forward cross-validation
+</div>
+<p>A signal fires only when <code>S ≥ τ</code>, where <code>τ</code> is the tier-specific threshold. Threshold values are public.</p>
+
+<h3>Signal classes</h3>
+<table>
+<thead><tr><th>Class</th><th>Trigger</th><th>Typical horizon</th></tr></thead>
+<tbody>
+<tr><td>Bull</td><td>Score ≥ 7.5 with positive momentum</td><td>1–14 days</td></tr>
+<tr><td>Watch</td><td>5.5 ≤ Score &lt; 7.5</td><td>1–30 days</td></tr>
+<tr><td>Caution</td><td>Score &lt; 4.0 or risk flag elevated</td><td>Indefinite</td></tr>
+<tr><td>Pre-signal</td><td>Insider tier · score 7.0+ and accumulation in early window</td><td>Variable</td></tr>
+</tbody>
+</table>
+
+<h2 id="architecture"><span class="num">05</span>Architecture</h2>
+<p>ArtSignal is built around a deterministic ingestion pipeline, a stateless scoring service, and an on-chain attestation layer.</p>
+<ul>
+  <li><strong>Ingestion:</strong> Helius WebSockets + dedicated Geyser plugin parse every block within ~400ms.</li>
+  <li><strong>Storage:</strong> append-only ClickHouse cluster; warm 90 days, cold to S3.</li>
+  <li><strong>Inference:</strong> ONNX-runtime model servers, p99 latency 28ms.</li>
+  <li><strong>Attestation:</strong> each fired signal hashed and recorded via memo-program on Solana within the same slot.</li>
+  <li><strong>Distribution:</strong> tier-gated WebSocket fan-out, Telegram & Discord bots, REST/gRPC API.</li>
+</ul>
+
+<h2 id="token"><span class="num">06</span>$SIGNAL token design</h2>
+<p>$SIGNAL is a Solana SPL token with a fixed supply of 100,000,000. It serves three purposes:</p>
+<ol>
+  <li><strong>Tier access</strong> — staked balances unlock real-time signals, pre-signal intelligence, and API.</li>
+  <li><strong>Revenue share</strong> — 70% of subscription, API, and integration revenue is distributed pro-rata to stakers each epoch (7 days).</li>
+  <li><strong>Governance</strong> — stakers vote on signal-tier thresholds, fee schedules, treasury allocation, and partner integrations.</li>
+</ol>
+
+<h3>Distribution</h3>
+<table>
+<thead><tr><th>Bucket</th><th>%</th><th>Vesting</th></tr></thead>
+<tbody>
+<tr><td>Community rewards</td><td>35%</td><td>5-year emission curve</td></tr>
+<tr><td>Ecosystem & grants</td><td>20%</td><td>Multi-sig, milestone-released</td></tr>
+<tr><td>Development fund</td><td>20%</td><td>3-year linear</td></tr>
+<tr><td>Team</td><td>15%</td><td>1-year cliff, 4-year linear</td></tr>
+<tr><td>Reserve</td><td>10%</td><td>Locked, governance-released</td></tr>
+</tbody>
+</table>
+
+<h3>Burn mechanism</h3>
+<p>10% of all monthly platform fees are programmatically burned via the SPL <code>burn</code> instruction. Burns are visible on-chain and reflected in real-time on the public dashboard.</p>
+
+<h2 id="governance"><span class="num">07</span>Governance</h2>
+<p>From Phase 06, $SIGNAL stakers govern via on-chain proposals using a quadratic-voting module. Quorum is 4% of circulating supply; supermajority (66%) is required for treasury motions and parameter changes affecting more than one tier simultaneously.</p>
+
+<h2 id="accountability"><span class="num">08</span>Accountability layer</h2>
+<p>Every signal — bull, watch, caution, pre-signal — is hashed and stamped on-chain at the moment of emission. The hash includes asset, score, timestamp, and signer wallet. <strong>No retroactive editing is possible.</strong></p>
+<p>Performance is computed by deterministic, open-source scripts and re-published monthly. Bad calls are not removed from the record. Win rate, average return, max drawdown, and t-stat are all available via the public dashboard.</p>
+
+<h2 id="risks"><span class="num">09</span>Risks & mitigations</h2>
+<ul>
+  <li><strong>Model decay:</strong> rolling re-training plus champion/challenger evaluation.</li>
+  <li><strong>Front-running of public signals:</strong> tiered release cadence; pre-signal channel is not broadcast until N blocks of inclusion confirmed.</li>
+  <li><strong>Oracle/data integrity:</strong> redundant providers; consensus required across at least two independent sources.</li>
+  <li><strong>Governance capture:</strong> quadratic voting + delegated voting + 7-day timelock on critical parameters.</li>
+  <li><strong>Regulatory:</strong> ongoing legal review; geofencing where required.</li>
+</ul>
+
+<h2 id="future"><span class="num">10</span>Future work</h2>
+<p>Cross-chain expansion (initially EVM L2s and Sui), formal verification of the attestation contract, an on-chain marketplace for community-published signal models, and an institutional offering (BAML-grade reports + co-located inference).</p>
+
+<p style="margin-top:48px;font-size:11px;color:var(--mid)">© 2026 ArtSignal Labs · Whitepaper v1.2 · This document is informational and does not constitute an offer to sell securities. See <a href="disclaimer.html">Disclaimer</a> and <a href="terms.html">Terms</a>.</p>
+
+</main>
+
+<footer>
+  <span>© 2026 ArtSignal · artsignal.fun</span>
+  <div class="foot-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="disclaimer.html">Disclaimer</a>
+    <a href="whitepaper.html">Whitepaper</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Policy — ArtSignal</title>
+<meta name="description" content="How ArtSignal uses cookies and similar technologies.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0A0A'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23F2F0EB'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0A0A0A;--paper:#F2F0EB;--mid:#888;--line:rgba(0,0,0,0.1);--em:1px solid rgba(0,0,0,0.12)}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Mono',monospace;background:var(--paper);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{opacity:.6}
+nav{position:sticky;top:0;z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:rgba(242,240,235,.92);backdrop-filter:blur(16px);border-bottom:var(--em)}
+.nav-logo{font-family:'Instrument Serif',serif;font-size:20px;letter-spacing:-.5px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo .dot{width:6px;height:6px;background:var(--ink);border-radius:50%;display:inline-block;animation:blink 2s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-back{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mid);text-decoration:none}
+.nav-back:hover{color:var(--ink);opacity:1}
+header.page-h{padding:80px 40px 40px;border-bottom:var(--em)}
+.eyebrow{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--mid);margin-bottom:16px}
+h1{font-family:'Instrument Serif',serif;font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-2px;font-weight:400}
+h1 em{font-style:italic;color:var(--mid)}
+.meta{margin-top:24px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mid)}
+main{flex:1;max-width:780px;padding:60px 40px 80px;width:100%;margin:0 auto}
+h2{font-family:'Instrument Serif',serif;font-size:28px;letter-spacing:-.5px;margin:48px 0 16px;font-weight:400}
+h2:first-child{margin-top:0}
+p,li{font-size:13px;line-height:1.9;color:#333;margin-bottom:16px}
+ul,ol{padding-left:20px;margin-bottom:16px}
+li{margin-bottom:8px}
+strong{color:var(--ink);font-weight:500}
+table{width:100%;border-collapse:collapse;border:var(--em);margin:24px 0}
+th,td{font-size:11px;padding:12px 16px;text-align:left;border-bottom:var(--em);vertical-align:top;line-height:1.7}
+th{background:var(--ink);color:var(--paper);font-weight:400;letter-spacing:2px;text-transform:uppercase;font-size:9px}
+tr:last-child td{border-bottom:none}
+.pref-card{border:var(--em);padding:24px;margin:32px 0;background:rgba(0,0,0,.02)}
+.pref-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:var(--em);gap:20px}
+.pref-row:last-of-type{border-bottom:none}
+.pref-info{flex:1}
+.pref-name{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.pref-desc{font-size:10px;color:var(--mid);line-height:1.7}
+.toggle{position:relative;width:44px;height:24px;background:var(--line);border:none;border-radius:12px;cursor:pointer;transition:background .25s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:var(--paper);border-radius:50%;transition:transform .25s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.toggle.on{background:var(--ink)}
+.toggle.on::after{transform:translateX(20px)}
+.toggle.locked{opacity:.5;cursor:not-allowed}
+.pref-actions{display:flex;gap:8px;margin-top:24px;flex-wrap:wrap}
+.pref-btn{font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:11px 20px;cursor:pointer;border:1px solid var(--ink);background:transparent;color:var(--ink);transition:all .2s}
+.pref-btn.primary{background:var(--ink);color:var(--paper)}
+.pref-btn:hover{opacity:.75}
+.toast{position:fixed;bottom:32px;right:40px;z-index:999;background:var(--ink);color:var(--paper);padding:14px 24px;font-size:9px;letter-spacing:3px;text-transform:uppercase;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.on{transform:translateY(0);opacity:1}
+footer{border-top:var(--em);padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:8px;letter-spacing:2px;color:var(--mid);text-transform:uppercase}
+footer a{color:var(--mid);text-decoration:none}
+footer a:hover{color:var(--ink)}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
+@media(max-width:640px){nav{padding:0 20px}header.page-h{padding:60px 20px 30px}main{padding:40px 20px 60px}footer{padding:20px;flex-direction:column;align-items:flex-start}.toast{right:20px;left:20px;bottom:20px;text-align:center}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">ArtSignal <span class="dot"></span></a>
+  <a href="index.html" class="nav-back">← Back to home</a>
+</nav>
+
+<header class="page-h">
+  <div class="eyebrow">// Legal</div>
+  <h1>Cookie <em>policy</em></h1>
+  <div class="meta">Effective · April 2026</div>
+</header>
+
+<main>
+
+<h2>What are cookies?</h2>
+<p>Cookies are small text files stored on your device when you visit a website. They help the site remember your preferences, keep you signed in, and understand how visitors use it. ArtSignal also uses similar technologies such as <strong>localStorage</strong> and <strong>pixel beacons</strong>; for simplicity we refer to all of them as "cookies".</p>
+
+<h2>Cookies we use</h2>
+<table>
+<thead><tr><th>Category</th><th>Purpose</th><th>Retention</th></tr></thead>
+<tbody>
+<tr><td><strong>Strictly necessary</strong></td><td>Session, security, load balancing, cookie consent state. The site cannot function without these.</td><td>Session — 12 months</td></tr>
+<tr><td><strong>Functional</strong></td><td>Remember your wallet preference, signal filter settings, theme.</td><td>30 days</td></tr>
+<tr><td><strong>Analytics</strong></td><td>Aggregate, pseudonymized usage data — pages viewed, clicks, performance, error rates. Helps us improve.</td><td>13 months</td></tr>
+<tr><td><strong>Marketing</strong></td><td>Measure campaign effectiveness on Twitter/X, Telegram and partner sites. Off by default.</td><td>13 months</td></tr>
+</tbody>
+</table>
+
+<h2>Manage your preferences</h2>
+<p>Use the controls below to set your cookie preferences. Your choice is saved locally and applies to this device and browser. You can change your preferences at any time.</p>
+
+<div class="pref-card">
+  <div class="pref-row">
+    <div class="pref-info">
+      <div class="pref-name">Strictly necessary</div>
+      <div class="pref-desc">Always on. Required for the site to function.</div>
+    </div>
+    <button class="toggle on locked" disabled aria-label="Required"></button>
+  </div>
+  <div class="pref-row">
+    <div class="pref-info">
+      <div class="pref-name">Functional</div>
+      <div class="pref-desc">Remember UI preferences (filters, theme).</div>
+    </div>
+    <button class="toggle on" id="tg-func" aria-label="Functional"></button>
+  </div>
+  <div class="pref-row">
+    <div class="pref-info">
+      <div class="pref-name">Analytics</div>
+      <div class="pref-desc">Help us understand site usage anonymously.</div>
+    </div>
+    <button class="toggle" id="tg-ana" aria-label="Analytics"></button>
+  </div>
+  <div class="pref-row">
+    <div class="pref-info">
+      <div class="pref-name">Marketing</div>
+      <div class="pref-desc">Measure campaigns and tailor outreach.</div>
+    </div>
+    <button class="toggle" id="tg-mkt" aria-label="Marketing"></button>
+  </div>
+  <div class="pref-actions">
+    <button class="pref-btn primary" onclick="acceptAll()">Accept all</button>
+    <button class="pref-btn" onclick="rejectAll()">Reject all</button>
+    <button class="pref-btn" onclick="savePrefs()">Save preferences</button>
+  </div>
+</div>
+
+<h2>Third parties</h2>
+<p>Some cookies are set by third parties when you interact with embeds (e.g. an X/Twitter feed) or follow off-site links. We do not control those cookies; please refer to the relevant third-party policies.</p>
+
+<h2>Browser controls</h2>
+<p>You can also block or delete cookies through your browser settings. Note that doing so may break parts of the site. Most browsers also support a "Do Not Track" or Global Privacy Control signal — we honor these when received.</p>
+
+<h2>Contact</h2>
+<p>Questions about cookies: <a href="mailto:privacy@artsignal.fun">privacy@artsignal.fun</a></p>
+
+</main>
+
+<div class="toast" id="toast">Saved</div>
+
+<footer>
+  <span>© 2026 ArtSignal · artsignal.fun</span>
+  <div class="foot-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="disclaimer.html">Disclaimer</a>
+    <a href="whitepaper.html">Whitepaper</a>
+  </div>
+</footer>
+
+<script>
+const KEY='as_cookie_prefs';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{func:true,ana:false,mkt:false}}catch(e){return{func:true,ana:false,mkt:false}}}
+function paint(p){document.getElementById('tg-func').classList.toggle('on',!!p.func);document.getElementById('tg-ana').classList.toggle('on',!!p.ana);document.getElementById('tg-mkt').classList.toggle('on',!!p.mkt)}
+function read(){return{func:document.getElementById('tg-func').classList.contains('on'),ana:document.getElementById('tg-ana').classList.contains('on'),mkt:document.getElementById('tg-mkt').classList.contains('on')}}
+['tg-func','tg-ana','tg-mkt'].forEach(id=>{document.getElementById(id).addEventListener('click',function(){if(this.classList.contains('locked'))return;this.classList.toggle('on')})});
+function save(p){localStorage.setItem(KEY,JSON.stringify(p));localStorage.setItem('as_cookie_decided','1')}
+function acceptAll(){const p={func:true,ana:true,mkt:true};paint(p);save(p);toast('All cookies accepted')}
+function rejectAll(){const p={func:false,ana:false,mkt:false};paint(p);save(p);toast('Non-essential cookies rejected')}
+function savePrefs(){const p=read();save(p);toast('Preferences saved')}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
+paint(load());
+</script>
+</body>
+</html>
