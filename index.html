@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArtSignal — Read the Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Editorial+New:ital@0;1&family=Neue+Montreal:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #0A0A0A;
+  --paper: #F2F0EB;
+  --mid: #888;
+  --dim: #333;
+  --line: rgba(0,0,0,0.1);
+  --accent: #0A0A0A;
+  --em: 1px solid rgba(0,0,0,0.12);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── CURSOR ─── */
+#cur {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 8px; height: 8px; background: var(--ink); border-radius: 50%;
+  transform: translate(-50%,-50%);
+  transition: width .25s, height .25s, background .2s;
+  mix-blend-mode: multiply;
+}
+#cur-ring {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 50%;
+  transform: translate(-50%,-50%);
+  transition: width .35s cubic-bezier(.25,1,.5,1), height .35s cubic-bezier(.25,1,.5,1), border-color .2s;
+}
+body:has(a:hover) #cur, body:has(button:hover) #cur { width: 0; height: 0; }
+body:has(a:hover) #cur-ring, body:has(button:hover) #cur-ring { width: 80px; height: 80px; border-color: var(--ink); }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-thumb { background: var(--ink); }
+
+/* ─── TICKER ─── */
+.ticker-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 28px;
+  border-bottom: var(--em);
+  background: var(--ink);
+  overflow: hidden;
+  display: flex; align-items: center;
+}
+.ticker-track {
+  display: flex; white-space: nowrap;
+  animation: slide-l 40s linear infinite;
+}
+.ticker-item {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  padding: 0 32px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.ticker-item .up { color: #fff; }
+.ticker-item .dn { color: rgba(255,255,255,0.35); }
+@keyframes slide-l { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 28px; left: 0; right: 0; z-index: 99;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 52px;
+  background: rgba(242,240,235,0.92);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: var(--em);
+}
+.nav-logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px; letter-spacing: -0.5px;
+  color: var(--ink); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo .dot { width: 6px; height: 6px; background: var(--ink); border-radius: 50%; display: inline-block; animation: blink-dot 2s step-end infinite; }
+@keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0} }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--mid); text-decoration: none;
+  transition: color .2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.25,1,.5,1);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-cta {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  background: var(--ink); color: var(--paper); border: none;
+  padding: 9px 20px; cursor: none; transition: opacity .2s;
+}
+.nav-cta:hover { opacity: .75; }
+.hamburger { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: none; }
+.hamburger span { width: 20px; height: 1px; background: var(--ink); display: block; transition: all .3s; }
+.mob-menu {
+  display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0; z-index: 98;
+  background: var(--paper); flex-direction: column;
+  padding: 40px; gap: 8px;
+  border-top: var(--em);
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid);
+  text-decoration: none; padding: 16px 0; border-bottom: var(--em);
+  transition: color .2s;
+}
+.mob-menu a:hover { color: var(--ink); }
+
+/* ─── HERO ─── */
+#hero {
+  min-height: 100vh; padding-top: 80px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: end;
+  border-bottom: var(--em);
+  position: relative; overflow: hidden;
+}
+.hero-left {
+  padding: 80px 40px 60px;
+  border-right: var(--em);
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 32px;
+}
+.hero-tag {
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
+  display: flex; align-items: center; gap: 10px;
+}
+.live-pill {
+  background: var(--ink); color: var(--paper);
+  padding: 3px 10px; font-size: 8px; letter-spacing: 3px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.live-pill::before { content: ''; width: 5px; height: 5px; background: #fff; border-radius: 50%; animation: blink-dot 1.5s step-end infinite; }
+h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(64px, 9vw, 128px);
+  line-height: .93; letter-spacing: -3px;
+  font-weight: 400;
+}
+h1 em { font-style: italic; color: var(--mid); }
+.hero-sub {
+  font-size: 12px; line-height: 1.9; color: var(--mid);
+  max-width: 380px;
+}
+.hero-sub strong { color: var(--ink); font-weight: 500; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  padding: 13px 28px; cursor: none; text-decoration: none;
+  transition: all .2s; display: inline-block; border: 1px solid transparent;
+}
+.btn-fill { background: var(--ink); color: var(--paper); }
+.btn-fill:hover { opacity: .75; }
+.btn-ghost { border-color: var(--ink); color: var(--ink); background: transparent; }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+.hero-right {
+  padding: 80px 40px 60px;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 40px;
+}
+.hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: var(--em); }
+.stat-box {
+  background: var(--paper); padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: background .2s;
+}
+.stat-box:hover { background: var(--ink); }
+.stat-box:hover .stat-n, .stat-box:hover .stat-l { color: var(--paper); }
+.stat-n {
+  font-family: 'Instrument Serif', serif;
+  font-size: 48px; line-height: 1; letter-spacing: -2px; color: var(--ink);
+  transition: color .2s;
+}
+.stat-l { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); transition: color .2s; }
+.hero-quote {
+  font-family: 'Instrument Serif', serif;
+  font-size: 18px; font-style: italic; line-height: 1.5;
+  color: var(--mid); border-left: 2px solid var(--ink); padding-left: 20px;
+}
+.hero-scroll {
+  position: absolute; bottom: 30px; left: 40px;
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid);
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-scroll::before { content: ''; width: 32px; height: 1px; background: var(--mid); }
+.scroll-arrow { animation: bounce-y 2s ease-in-out infinite; }
+@keyframes bounce-y { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+
+/* ─── SIGNAL FEED ─── */
+#signals {
+  border-bottom: var(--em);
+}
+.section-band {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: var(--em);
+  background: var(--ink); color: var(--paper);
+}
+.band-label { font-size: 9px; letter-spacing: 4px; text-transform: uppercase; }
+.band-right { display: flex; gap: 8px; }
+.filter-btn {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  padding: 6px 14px; background: transparent; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.4); cursor: none; transition: all .2s;
+}
+.filter-btn.on, .filter-btn:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.08); }
+
+.signal-table { width: 100%; border-collapse: collapse; }
+.signal-table thead tr { border-bottom: var(--em); }
+.signal-table th {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid);
+  padding: 14px 40px; text-align: left; font-weight: 400; white-space: nowrap;
+}
+.signal-row {
+  border-bottom: var(--em);
+  transition: background .15s;
+  cursor: none;
+}
+.signal-row:hover { background: rgba(0,0,0,0.025); }
+.signal-row td { padding: 22px 40px; vertical-align: middle; }
+.sig-type {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  padding: 4px 10px; display: inline-block; border: 1px solid;
+  white-space: nowrap;
+}
+.sig-bull { color: var(--ink); border-color: var(--ink); }
+.sig-watch { color: var(--mid); border-color: var(--mid); }
+.sig-bear { color: var(--mid); border-color: var(--mid); background: rgba(0,0,0,0.04); }
+.sig-name { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -.5px; }
+.sig-ticker { font-size: 9px; letter-spacing: 2px; color: var(--mid); margin-top: 2px; }
+.sig-desc { font-size: 11px; line-height: 1.7; color: var(--mid); max-width: 340px; }
+.sig-score-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.sig-score {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px; letter-spacing: -1px; line-height: 1;
+}
+.sig-score-label { font-size: 8px; letter-spacing: 3px; color: var(--mid); }
+.sig-val { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.sig-val.pos { color: var(--ink); }
+.sig-val.neg { color: var(--mid); }
+.sig-age { font-size: 9px; letter-spacing: 2px; color: var(--mid); }
+.sig-bar-wrap { width: 120px; }
+.sig-bar-track { height: 2px; background: var(--line); width: 100%; position: relative; }
+.sig-bar-fill { height: 100%; background: var(--ink); transition: width 1.2s cubic-bezier(.25,1,.5,1); }
+
+/* ─── HOW IT WORKS ─── */
+#howitworks { border-bottom: var(--em); }
+.section-head {
+  padding: 60px 40px 40px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  border-bottom: var(--em); gap: 40px;
+}
+.section-h-left {}
+.sec-eyebrow { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid); margin-bottom: 12px; }
+.sec-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(40px, 6vw, 72px); letter-spacing: -2px; line-height: .95; font-weight: 400;
+}
+.sec-title em { font-style: italic; color: var(--mid); }
+.sec-desc { font-size: 12px; color: var(--mid); line-height: 1.8; max-width: 320px; }
+.how-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.how-step {
+  padding: 40px 32px; border-right: var(--em);
+  display: flex; flex-direction: column; gap: 20px;
+  position: relative; overflow: hidden;
+  transition: background .2s;
+  cursor: none;
+}
+.how-step:last-child { border-right: none; }
+.how-step::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 0;
+  background: var(--ink); transition: height .4s cubic-bezier(.25,1,.5,1); z-index: 0;
+}
+.how-step:hover::after { height: 100%; }
+.how-step > * { position: relative; z-index: 1; }
+.how-step:hover .step-n, .how-step:hover .step-title, .how-step:hover .step-body { color: var(--paper); }
+.how-step:hover .step-tags .tag { border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
+.step-n {
+  font-family: 'Instrument Serif', serif;
+  font-size: 64px; letter-spacing: -3px; line-height: 1; color: rgba(0,0,0,.1);
+  transition: color .2s;
+}
+.step-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px; letter-spacing: -.5px; transition: color .2s;
+}
+.step-body { font-size: 11px; line-height: 1.8; color: var(--mid); transition: color .2s; }
+.step-tags { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.tag { font-size: 8px; letter-spacing: 2px; padding: 4px 8px; border: 1px solid var(--line); color: var(--mid); display: inline-block; transition: all .2s; }
+
+/* ─── ROADMAP ─── */
+#roadmap { border-bottom: var(--em); }
+.road-scroll { overflow-x: auto; padding: 0 40px 40px; -webkit-overflow-scrolling: touch; }
+.road-scroll::-webkit-scrollbar { height: 1px; }
+.road-track { display: flex; min-width: max-content; margin-top: 0; padding-top: 40px; position: relative; }
+.road-track::before {
+  content: ''; position: absolute; top: 56px; left: 0; right: 0;
+  height: 1px; background: var(--line);
+}
+.road-item { width: 220px; padding: 0 20px 0 0; flex-shrink: 0; cursor: none; }
+.road-node {
+  width: 14px; height: 14px; border: 1px solid var(--mid);
+  background: var(--paper); border-radius: 50%;
+  margin-bottom: 28px; position: relative; z-index: 2;
+  transition: all .2s;
+}
+.road-item.done .road-node { background: var(--ink); border-color: var(--ink); }
+.road-item.now .road-node { background: var(--ink); border-color: var(--ink); box-shadow: 0 0 0 4px rgba(0,0,0,.12); animation: road-pulse 2s ease-in-out infinite; }
+@keyframes road-pulse { 0%,100%{box-shadow:0 0 0 4px rgba(0,0,0,.12)} 50%{box-shadow:0 0 0 8px rgba(0,0,0,.06)} }
+.road-inner {
+  background: var(--paper); border: var(--em); padding: 24px 20px;
+  transition: all .25s; width: 200px;
+}
+.road-item:hover .road-inner { background: var(--ink); }
+.road-item:hover .road-phase-label,
+.road-item:hover .road-name,
+.road-item:hover .road-body,
+.road-item:hover .road-status { color: rgba(255,255,255,.6); }
+.road-item:hover .road-name { color: var(--paper); }
+.road-phase-label { font-size: 8px; letter-spacing: 3px; color: var(--mid); margin-bottom: 8px; transition: color .2s; }
+.road-name { font-family: 'Instrument Serif', serif; font-size: 22px; margin-bottom: 10px; transition: color .2s; }
+.road-body { font-size: 10px; color: var(--mid); line-height: 1.7; transition: color .2s; }
+.road-status { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-top: 12px; display: block; transition: color .2s; }
+.road-item.done .road-status { color: var(--ink); }
+.road-item.now .road-status { color: var(--ink); font-weight: 500; }
+
+/* ─── TOKENOMICS ─── */
+#tokenomics { border-bottom: var(--em); }
+.token-body { display: grid; grid-template-columns: 1fr 1fr; }
+.token-left { padding: 60px 40px; border-right: var(--em); }
+.token-right { padding: 60px 40px; }
+
+/* Interactive distribution bars */
+.distrib { display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
+.distrib-row {
+  display: flex; align-items: center; gap: 20px;
+  padding: 16px 0; border-bottom: var(--em); cursor: none;
+  transition: background .15s; margin: 0 -40px; padding-left: 40px; padding-right: 40px;
+}
+.distrib-row:hover { background: var(--ink); }
+.distrib-row:hover .dr-label, .distrib-row:hover .dr-pct, .distrib-row:hover .dr-amt { color: var(--paper); }
+.distrib-row:hover .dr-bar-fill { background: var(--paper); }
+.dr-pct { font-family: 'Instrument Serif', serif; font-size: 28px; letter-spacing: -1px; min-width: 72px; transition: color .2s; }
+.dr-info { flex: 1; }
+.dr-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; transition: color .2s; }
+.dr-amt { font-size: 9px; color: var(--mid); transition: color .2s; }
+.dr-bar { flex: 1; height: 1px; background: var(--line); position: relative; }
+.dr-bar-fill { position: absolute; top: 0; left: 0; height: 1px; background: var(--ink); width: 0; transition: width 1.4s cubic-bezier(.25,1,.5,1), background .2s; }
+
+.token-info { display: flex; flex-direction: column; gap: 0; }
+.ti-block { padding: 28px 0; border-bottom: var(--em); }
+.ti-block:first-child { padding-top: 0; }
+.ti-title { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid); margin-bottom: 16px; }
+.ti-rows { display: flex; flex-direction: column; gap: 12px; }
+.ti-row { display: flex; justify-content: space-between; align-items: center; }
+.ti-k { font-size: 10px; color: var(--mid); }
+.ti-v { font-size: 11px; font-weight: 500; }
+.ca-row {
+  display: flex; align-items: center; border: var(--em);
+  margin-top: 16px; overflow: hidden;
+}
+.ca-addr { flex: 1; padding: 12px 16px; font-size: 10px; color: var(--mid); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ca-btn {
+  background: var(--ink); color: var(--paper); border: none;
+  padding: 12px 20px; font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  cursor: none; transition: opacity .2s; flex-shrink: 0;
+}
+.ca-btn:hover { opacity: .7; }
+.tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tier-card {
+  border: var(--em); padding: 16px;
+  transition: all .2s; cursor: none;
+}
+.tier-card:hover { background: var(--ink); }
+.tier-card:hover .tc-name, .tier-card:hover .tc-req, .tier-card:hover .tc-desc { color: var(--paper); }
+.tc-name { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; transition: color .2s; }
+.tc-req { font-family: 'Instrument Serif', serif; font-size: 20px; letter-spacing: -.5px; transition: color .2s; }
+.tc-desc { font-size: 9px; color: var(--mid); margin-top: 6px; line-height: 1.6; transition: color .2s; }
+
+/* ─── COMMUNITY ─── */
+#community { border-bottom: var(--em); }
+.community-hero {
+  padding: 100px 40px;
+  text-align: center; display: flex; flex-direction: column; align-items: center; gap: 40px;
+}
+.comm-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(56px, 10vw, 120px); line-height: .9; letter-spacing: -3px; font-weight: 400;
+}
+.comm-title em { font-style: italic; color: var(--mid); }
+.comm-sub { font-size: 12px; color: var(--mid); line-height: 1.9; max-width: 480px; }
+.comm-sub strong { color: var(--ink); font-weight: 500; }
+.social-row { display: flex; width: 100%; max-width: 560px; border: var(--em); }
+.soc-card {
+  flex: 1; padding: 28px 16px;
+  border-right: var(--em); text-decoration: none; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  transition: background .2s; cursor: none;
+}
+.soc-card:last-child { border-right: none; }
+.soc-card:hover { background: var(--ink); }
+.soc-card:hover .soc-icon, .soc-card:hover .soc-n, .soc-card:hover .soc-label { color: var(--paper); }
+.soc-icon { font-size: 18px; transition: color .2s; }
+.soc-n { font-family: 'Instrument Serif', serif; font-size: 32px; letter-spacing: -1px; transition: color .2s; }
+.soc-label { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); transition: color .2s; }
+.email-row { display: flex; width: 100%; max-width: 480px; border: var(--em); }
+.email-in {
+  flex: 1; background: none; border: none; padding: 16px 20px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink); outline: none;
+}
+.email-in::placeholder { color: var(--mid); }
+.email-go {
+  background: var(--ink); color: var(--paper); border: none;
+  padding: 16px 28px; font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  cursor: none; transition: opacity .2s;
+}
+.email-go:hover { opacity: .75; }
+
+/* ─── FAQ ─── */
+#faq { border-bottom: var(--em); }
+.faq-wrap { max-width: 720px; margin: 0 auto; }
+.faq-item { border-bottom: var(--em); }
+.faq-q {
+  width: 100%; text-align: left; background: none; border: none;
+  padding: 24px 0; display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  cursor: none; transition: opacity .15s;
+}
+.faq-q:hover { opacity: .6; }
+.faq-qt { font-family: 'Instrument Serif', serif; font-size: 18px; letter-spacing: -.3px; color: var(--ink); }
+.faq-ic {
+  width: 28px; height: 28px; border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--mid); transition: transform .35s cubic-bezier(.25,1,.5,1);
+  flex-shrink: 0;
+}
+.faq-item.open .faq-ic { transform: rotate(45deg); }
+.faq-a {
+  font-size: 12px; color: var(--mid); line-height: 1.9;
+  max-height: 0; overflow: hidden;
+  transition: max-height .5s cubic-bezier(.25,1,.5,1), padding .3s;
+}
+.faq-a.open { max-height: 400px; padding-bottom: 24px; }
+
+/* ─── ABOUT ─── */
+#about { border-bottom: var(--em); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.about-left { padding: 60px 40px; border-right: var(--em); }
+.about-body { font-size: 13px; color: var(--mid); line-height: 2; }
+.about-body p { margin-bottom: 20px; }
+.about-body strong { color: var(--ink); font-weight: 500; }
+.about-right { padding: 60px 40px; display: flex; flex-direction: column; gap: 0; }
+.manifesto-line {
+  padding: 24px 0; border-bottom: var(--em); display: flex; gap: 20px; align-items: flex-start;
+  cursor: none; transition: background .2s; margin: 0 -40px; padding-left: 40px; padding-right: 40px;
+}
+.manifesto-line:hover { background: var(--ink); }
+.manifesto-line:hover .man-num, .manifesto-line:hover .man-q, .manifesto-line:hover .man-src { color: var(--paper); }
+.man-num { font-family: 'Instrument Serif', serif; font-size: 13px; font-style: italic; color: var(--mid); min-width: 24px; transition: color .2s; }
+.man-q { font-family: 'Instrument Serif', serif; font-size: 17px; font-style: italic; line-height: 1.5; flex: 1; transition: color .2s; }
+.man-src { font-size: 8px; letter-spacing: 3px; color: var(--mid); margin-top: 4px; white-space: nowrap; transition: color .2s; }
+
+/* ─── PARTNERS ─── */
+#partners { border-bottom: var(--em); overflow: hidden; }
+.partner-band { display: flex; overflow: hidden; border-bottom: var(--em); }
+.partner-track { display: flex; animation: slide-l 22s linear infinite; }
+.partner-item {
+  padding: 22px 48px; border-right: var(--em);
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid);
+  white-space: nowrap; transition: color .2s; cursor: none;
+}
+.partner-item:hover { color: var(--ink); }
+
+/* ─── FOOTER ─── */
+footer { padding: 0; }
+.foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr; border-bottom: var(--em); }
+.foot-col { padding: 48px 40px; border-right: var(--em); }
+.foot-col:last-child { border-right: none; }
+.foot-logo { font-family: 'Instrument Serif', serif; font-size: 28px; letter-spacing: -.5px; margin-bottom: 16px; }
+.foot-tagline { font-size: 11px; color: var(--mid); line-height: 1.8; }
+.foot-col h4 { font-size: 8px; letter-spacing: 4px; text-transform: uppercase; color: var(--mid); margin-bottom: 20px; }
+.foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.foot-col a { font-size: 11px; color: var(--mid); text-decoration: none; transition: color .2s; }
+.foot-col a:hover { color: var(--ink); }
+.foot-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px; flex-wrap: wrap; gap: 12px;
+}
+.foot-copy { font-size: 8px; letter-spacing: 2px; color: var(--mid); }
+.foot-built { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); display: flex; align-items: center; gap: 8px; }
+.foot-built::before { content: ''; width: 6px; height: 6px; background: var(--ink); border-radius: 50%; display: inline-block; animation: blink-dot 2s step-end infinite; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 32px; right: 40px; z-index: 999;
+  background: var(--ink); color: var(--paper);
+  padding: 14px 24px; font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  transform: translateY(20px); opacity: 0;
+  transition: all .3s cubic-bezier(.25,1,.5,1);
+  pointer-events: none;
+}
+.toast.on { transform: translateY(0); opacity: 1; }
+
+/* ─── REVEAL ─── */
+.rv { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.25,1,.5,1); }
+.rv.vis { opacity: 1; transform: translateY(0); }
+.rv-l { opacity: 0; transform: translateX(-20px); transition: opacity .7s ease, transform .7s cubic-bezier(.25,1,.5,1); }
+.rv-l.vis { opacity: 1; transform: translateX(0); }
+
+/* ─── MAGNETIC BUTTON ─── */
+.mag { transition: transform .3s cubic-bezier(.25,1,.5,1); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  #hero { grid-template-columns: 1fr; }
+  .hero-right { border-top: var(--em); }
+  .how-grid { grid-template-columns: 1fr 1fr; }
+  .token-body { grid-template-columns: 1fr; }
+  .token-left { border-right: none; border-bottom: var(--em); }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-left { border-right: none; border-bottom: var(--em); }
+  .foot-top { grid-template-columns: 1fr 1fr; }
+  .foot-col:nth-child(3) { border-top: var(--em); grid-column: span 2; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-right .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  #hero { padding-top: 80px; }
+  .hero-left, .hero-right { padding: 40px 20px; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .section-band { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .signal-table { display: block; overflow-x: auto; }
+  .signal-table thead { display: none; }
+  .signal-table tbody, .signal-row { display: block; }
+  .signal-row td { display: block; padding: 10px 20px; }
+  .signal-row td:not([data-show]) { display: none; }
+  .signal-row td[data-show] { display: block; }
+  .how-grid { grid-template-columns: 1fr; }
+  .how-step { border-right: none; border-bottom: var(--em); }
+  .road-scroll { padding: 0 20px 40px; }
+  .section-head { padding: 40px 20px 30px; flex-direction: column; align-items: flex-start; }
+  .community-hero { padding: 60px 20px; }
+  .social-row { flex-direction: column; }
+  .soc-card { border-right: none; border-bottom: var(--em); flex-direction: row; justify-content: space-between; padding: 20px; }
+  .token-left, .token-right { padding: 40px 20px; }
+  .faq-wrap { margin: 0; }
+  #faq .section-head, #about .section-head { padding: 40px 20px 30px; }
+  .about-left, .about-right { padding: 40px 20px; }
+  .foot-top { grid-template-columns: 1fr; }
+  .foot-col { border-right: none !important; grid-column: span 1 !important; }
+  .foot-bottom { padding: 20px; }
+  #faq { padding-left: 20px; padding-right: 20px; }
+  .faq-wrap { padding: 0; }
+  .manifesto-line { margin: 0; padding-left: 20px; padding-right: 20px; }
+  .distrib-row { margin: 0; padding-left: 20px; padding-right: 20px; }
+  body { cursor: default; }
+  #cur, #cur-ring { display: none; }
+  * { cursor: auto; }
+  a, button { cursor: pointer !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="toast" id="toast">Copied</div>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item">SOL <span class="up">$148.32</span> +2.4%</span>
+    <span class="ticker-item">BONK <span class="up">$0.0000318</span> +8.1%</span>
+    <span class="ticker-item">WIF <span class="dn">$1.82</span> −3.2%</span>
+    <span class="ticker-item">POPCAT <span class="up">$0.421</span> +12.4%</span>
+    <span class="ticker-item">JUP <span class="up">$0.74</span> +1.7%</span>
+    <span class="ticker-item">PENGU <span class="up">$0.0092</span> +5.5%</span>
+    <span class="ticker-item">MAD LADS <span class="up">182 SOL</span> FLOOR</span>
+    <span class="ticker-item">NEW SIGNAL <span class="up">$GLITCH</span> 8.9/10</span>
+    <span class="ticker-item">SOL <span class="up">$148.32</span> +2.4%</span>
+    <span class="ticker-item">BONK <span class="up">$0.0000318</span> +8.1%</span>
+    <span class="ticker-item">WIF <span class="dn">$1.82</span> −3.2%</span>
+    <span class="ticker-item">POPCAT <span class="up">$0.421</span> +12.4%</span>
+    <span class="ticker-item">JUP <span class="up">$0.74</span> +1.7%</span>
+    <span class="ticker-item">PENGU <span class="up">$0.0092</span> +5.5%</span>
+    <span class="ticker-item">MAD LADS <span class="up">182 SOL</span> FLOOR</span>
+    <span class="ticker-item">NEW SIGNAL <span class="up">$GLITCH</span> 8.9/10</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">ArtSignal <span class="dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#signals">Signals</a></li>
+    <li><a href="#howitworks">Protocol</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#tokenomics">$SIGNAL</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-cta mag" onclick="scrollTo('#community')">Join Alpha</button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<nav class="mob-menu" id="mobMenu">
+  <a href="#signals" onclick="closeMob()">Signals</a>
+  <a href="#howitworks" onclick="closeMob()">Protocol</a>
+  <a href="#roadmap" onclick="closeMob()">Roadmap</a>
+  <a href="#tokenomics" onclick="closeMob()">$SIGNAL</a>
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#faq" onclick="closeMob()">FAQ</a>
+  <a href="#community" onclick="closeMob()">Join Alpha</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag rv"><span class="live-pill">Live</span>&nbsp; Solana signal intelligence</div>
+    <h1 class="rv" style="transition-delay:.1s">Read<br><em>the</em><br>Chain.</h1>
+    <p class="hero-sub rv" style="transition-delay:.2s">
+      The sharpest NFT, meme coin &amp; project intelligence on Solana.
+      <strong>Early signals. No noise.</strong>
+      We track on-chain data, community momentum, and narrative shifts so you move first.
+    </p>
+    <div class="hero-actions rv" style="transition-delay:.3s">
+      <a href="#signals" class="btn btn-fill mag">Live Signals</a>
+      <a href="#howitworks" class="btn btn-ghost mag">How it works</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stats rv" style="transition-delay:.2s">
+      <div class="stat-box">
+        <span class="stat-n" data-to="847">0</span>
+        <span class="stat-l">Signals Issued</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-n" data-to="68" data-suffix="%">0</span>
+        <span class="stat-l">Win Rate</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-n" data-to="4200" data-suffix="+">0</span>
+        <span class="stat-l">Alpha Members</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-n" data-to="312" data-suffix="%">0</span>
+        <span class="stat-l">Avg Return</span>
+      </div>
+    </div>
+    <blockquote class="hero-quote rv" style="transition-delay:.35s">
+      "The signal is in the chain.<br>Everything else is noise."
+    </blockquote>
+  </div>
+  <div class="hero-scroll"><span class="scroll-arrow">↓</span> Scroll to explore</div>
+</section>
+
+<!-- SIGNALS -->
+<section id="signals">
+  <div class="section-band">
+    <span class="band-label">// Live Intelligence Feed</span>
+    <div class="band-right">
+      <button class="filter-btn on" onclick="filterSig('all',this)">All</button>
+      <button class="filter-btn" onclick="filterSig('nft',this)">NFT</button>
+      <button class="filter-btn" onclick="filterSig('meme',this)">Meme</button>
+      <button class="filter-btn" onclick="filterSig('project',this)">Project</button>
+    </div>
+  </div>
+  <table class="signal-table" id="sigTable">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Asset</th>
+        <th>Analysis</th>
+        <th>Score</th>
+        <th>Change</th>
+        <th>Conviction</th>
+        <th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="signal-row rv" data-cat="nft">
+        <td data-show><span class="sig-type sig-bull">Bull</span></td>
+        <td data-show><div class="sig-name">Mad Lads</div><div class="sig-ticker">#NFT · Solana</div></td>
+        <td><div class="sig-desc">Floor sweep incoming. Whale wallets accumulating. Volume spike 280% over 24h. Social sentiment flipping bullish after Backpack ecosystem announcement.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">9.2</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val pos">+280% vol</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="92"></div></div></div></td>
+        <td><span class="sig-age">4m ago</span></td>
+      </tr>
+      <tr class="signal-row rv" data-cat="meme">
+        <td data-show><span class="sig-type sig-watch">Watch</span></td>
+        <td data-show><div class="sig-name">$POPCAT</div><div class="sig-ticker">#Meme · pump.fun</div></td>
+        <td><div class="sig-desc">Consolidating above key support. KOL chatter increasing on X. Major influencer hinting new campaign. Hold support at $0.38 or invalidate.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">6.8</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val pos">+12.4%</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="68"></div></div></div></td>
+        <td><span class="sig-age">12m ago</span></td>
+      </tr>
+      <tr class="signal-row rv" data-cat="project">
+        <td data-show><span class="sig-type sig-bull">Early</span></td>
+        <td data-show><div class="sig-name">Glitch Protocol</div><div class="sig-ticker">$GLITCH · Pre-launch</div></td>
+        <td><div class="sig-desc">Stealth launch. On-chain activity suggests coordinated accumulation. Dev wallets from 2 prior 100x projects. AI + DeFi on SVM narrative.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">8.9</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val">Pre-TGE</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="89"></div></div></div></td>
+        <td><span class="sig-age">28m ago</span></td>
+      </tr>
+      <tr class="signal-row rv" data-cat="nft">
+        <td data-show><span class="sig-type sig-bear">Caution</span></td>
+        <td data-show><div class="sig-name">DeGods</div><div class="sig-ticker">#NFT · Solana</div></td>
+        <td><div class="sig-desc">Insider sell pressure visible. Floor declining below 200 SOL psychological support. Team wallet movement flagged. Community fragile.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">3.1</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val neg">−42% vol</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="31"></div></div></div></td>
+        <td><span class="sig-age">1h ago</span></td>
+      </tr>
+      <tr class="signal-row rv" data-cat="meme">
+        <td data-show><span class="sig-type sig-bull">Bull</span></td>
+        <td data-show><div class="sig-name">$BONK</div><div class="sig-ticker">#Meme · Solana OG</div></td>
+        <td><div class="sig-desc">Breakout pattern forming on 4H chart. Key resistance at $0.000034. BONK DAO treasury buyback confirmed. CEX listing rumor gaining traction.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">7.6</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val pos">+8.1%</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="76"></div></div></div></td>
+        <td><span class="sig-age">2h ago</span></td>
+      </tr>
+      <tr class="signal-row rv" data-cat="project">
+        <td data-show><span class="sig-type sig-watch">Watch</span></td>
+        <td data-show><div class="sig-name">Jupiter</div><div class="sig-ticker">$JUP · DeFi Infra</div></td>
+        <td><div class="sig-desc">Q2 airdrop snapshot approaching. LP incentives increasing. New perps product gaining traction. Volume market share 34% of all Solana DEX.</div></td>
+        <td><div class="sig-score-wrap"><div class="sig-score">7.1</div><div class="sig-score-label">/ 10</div></div></td>
+        <td data-show><span class="sig-val pos">+1.7%</span></td>
+        <td><div class="sig-bar-wrap"><div class="sig-bar-track"><div class="sig-bar-fill" data-w="71"></div></div></div></td>
+        <td><span class="sig-age">3h ago</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="howitworks">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// Protocol</div>
+      <h2 class="sec-title rv">How it <em>works</em></h2>
+    </div>
+    <p class="sec-desc rv" style="transition-delay:.1s">Four steps from raw on-chain noise to a graded, actionable signal delivered before the market reacts.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-step rv">
+      <div class="step-n">01</div>
+      <div class="step-title">Scan</div>
+      <div class="step-body">On-chain crawler indexes every wallet, transaction, and contract on Solana in real-time. Whale movements and volume spikes flagged instantly.</div>
+      <div class="step-tags"><span class="tag">On-chain</span><span class="tag">Real-time</span><span class="tag">Wallet tracking</span></div>
+    </div>
+    <div class="how-step rv" style="transition-delay:.08s">
+      <div class="step-n">02</div>
+      <div class="step-title">Analyze</div>
+      <div class="step-body">AI models cross-reference on-chain signals with social sentiment, KOL activity, and narrative momentum to produce a raw conviction score.</div>
+      <div class="step-tags"><span class="tag">AI model</span><span class="tag">Sentiment</span><span class="tag">Scoring</span></div>
+    </div>
+    <div class="how-step rv" style="transition-delay:.16s">
+      <div class="step-n">03</div>
+      <div class="step-title">Signal</div>
+      <div class="step-body">When conviction exceeds threshold, a graded alert fires — Bull, Watch, or Caution — with entry context and risk factors directly to members.</div>
+      <div class="step-tags"><span class="tag">Graded alerts</span><span class="tag">Telegram</span><span class="tag">Discord</span></div>
+    </div>
+    <div class="how-step rv" style="transition-delay:.24s">
+      <div class="step-n">04</div>
+      <div class="step-title">Track</div>
+      <div class="step-body">Every signal is logged, reviewed, and scored. Win rate and accuracy metrics published on-chain monthly. No hiding bad calls.</div>
+      <div class="step-tags"><span class="tag">Track record</span><span class="tag">On-chain log</span><span class="tag">Transparency</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// Timeline</div>
+      <h2 class="sec-title rv">Road<em>map</em></h2>
+    </div>
+  </div>
+  <div class="road-scroll">
+    <div class="road-track">
+      <div class="road-item done rv">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 01 · Q4 2024</div>
+          <div class="road-name">Genesis</div>
+          <div class="road-body">Core team assembled. Signal methodology developed. Private alpha with 50 members.</div>
+          <span class="road-status">Completed ✓</span>
+        </div>
+      </div>
+      <div class="road-item done rv" style="transition-delay:.06s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 02 · Q1 2025</div>
+          <div class="road-name">Protocol</div>
+          <div class="road-body">On-chain crawler built. AI scoring model v1 trained. 200 alpha members onboarded.</div>
+          <span class="road-status">Completed ✓</span>
+        </div>
+      </div>
+      <div class="road-item now rv" style="transition-delay:.12s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 03 · Q2 2025</div>
+          <div class="road-name">Signal</div>
+          <div class="road-body">Public alpha launch. $SIGNAL token TGE. Telegram + Discord bot activation.</div>
+          <span class="road-status">In progress →</span>
+        </div>
+      </div>
+      <div class="road-item rv" style="transition-delay:.18s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 04 · Q3 2025</div>
+          <div class="road-name">Intelligence</div>
+          <div class="road-body">AI v2 model. NFT rarity analytics. Project due diligence reports.</div>
+          <span class="road-status">Upcoming</span>
+        </div>
+      </div>
+      <div class="road-item rv" style="transition-delay:.24s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 05 · Q4 2025</div>
+          <div class="road-name">Network</div>
+          <div class="road-body">API for developers. Partner signal integrations. Public ArtSignal Score dashboard.</div>
+          <span class="road-status">Upcoming</span>
+        </div>
+      </div>
+      <div class="road-item rv" style="transition-delay:.30s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 06 · Q1 2026</div>
+          <div class="road-name">DAO</div>
+          <div class="road-body">$SIGNAL stakers govern signal tiers, fees, and treasury allocation.</div>
+          <span class="road-status">Upcoming</span>
+        </div>
+      </div>
+      <div class="road-item rv" style="transition-delay:.36s">
+        <div class="road-node"></div>
+        <div class="road-inner">
+          <div class="road-phase-label">Phase 07 · 2026+</div>
+          <div class="road-name">Ecosystem</div>
+          <div class="road-body">Cross-chain expansion. Institutional subscriptions. ArtSignal Labs incubator.</div>
+          <span class="road-status">Future</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENOMICS -->
+<section id="tokenomics">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// $SIGNAL Token</div>
+      <h2 class="sec-title rv">Token<em>omics</em></h2>
+    </div>
+    <p class="sec-desc rv" style="transition-delay:.1s">100M total supply. Utility-first. No speculation. Revenue sharing for stakers.</p>
+  </div>
+  <div class="token-body">
+    <div class="token-left">
+      <div class="distrib" id="distrib">
+        <div class="distrib-row rv" data-w="35">
+          <div class="dr-pct">35%</div>
+          <div class="dr-info">
+            <div class="dr-label">Community Rewards</div>
+            <div class="dr-amt">35,000,000 $SIGNAL</div>
+          </div>
+          <div class="dr-bar"><div class="dr-bar-fill" data-w="35"></div></div>
+        </div>
+        <div class="distrib-row rv" style="transition-delay:.05s" data-w="20">
+          <div class="dr-pct">20%</div>
+          <div class="dr-info">
+            <div class="dr-label">Ecosystem &amp; Grants</div>
+            <div class="dr-amt">20,000,000 $SIGNAL</div>
+          </div>
+          <div class="dr-bar"><div class="dr-bar-fill" data-w="20"></div></div>
+        </div>
+        <div class="distrib-row rv" style="transition-delay:.1s">
+          <div class="dr-pct">20%</div>
+          <div class="dr-info">
+            <div class="dr-label">Development Fund</div>
+            <div class="dr-amt">20,000,000 $SIGNAL</div>
+          </div>
+          <div class="dr-bar"><div class="dr-bar-fill" data-w="20"></div></div>
+        </div>
+        <div class="distrib-row rv" style="transition-delay:.15s">
+          <div class="dr-pct">15%</div>
+          <div class="dr-info">
+            <div class="dr-label">Team (4yr vest)</div>
+            <div class="dr-amt">15,000,000 $SIGNAL</div>
+          </div>
+          <div class="dr-bar"><div class="dr-bar-fill" data-w="15"></div></div>
+        </div>
+        <div class="distrib-row rv" style="transition-delay:.2s">
+          <div class="dr-pct">10%</div>
+          <div class="dr-info">
+            <div class="dr-label">Reserve</div>
+            <div class="dr-amt">10,000,000 $SIGNAL</div>
+          </div>
+          <div class="dr-bar"><div class="dr-bar-fill" data-w="10"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="token-right rv" style="transition-delay:.1s">
+      <div class="token-info">
+        <div class="ti-block">
+          <div class="ti-title">Token Details</div>
+          <div class="ti-rows">
+            <div class="ti-row"><span class="ti-k">Total Supply</span><span class="ti-v">100,000,000</span></div>
+            <div class="ti-row"><span class="ti-k">Network</span><span class="ti-v">Solana (SPL)</span></div>
+            <div class="ti-row"><span class="ti-k">Revenue Share</span><span class="ti-v">70% to stakers</span></div>
+            <div class="ti-row"><span class="ti-k">Burn Mechanism</span><span class="ti-v">10% fees/month</span></div>
+            <div class="ti-row"><span class="ti-k">TGE</span><span class="ti-v">Q2 2025 · Jupiter LFG</span></div>
+          </div>
+          <div class="ca-row">
+            <span class="ca-addr" id="caAddr">artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL</span>
+            <button class="ca-btn" onclick="copyCA()">Copy CA</button>
+          </div>
+        </div>
+        <div class="ti-block">
+          <div class="ti-title">Access Tiers</div>
+          <div class="tier-grid">
+            <div class="tier-card">
+              <div class="tc-name">Scout</div>
+              <div class="tc-req">Free</div>
+              <div class="tc-desc">Delayed signals (2hr lag)</div>
+            </div>
+            <div class="tier-card">
+              <div class="tc-name">Alpha</div>
+              <div class="tc-req">5K $SIGNAL</div>
+              <div class="tc-desc">Real-time NFT signals</div>
+            </div>
+            <div class="tier-card">
+              <div class="tc-name">Insider</div>
+              <div class="tc-req">25K $SIGNAL</div>
+              <div class="tc-desc">Pre-signal intel + API</div>
+            </div>
+            <div class="tier-card">
+              <div class="tc-name">Whale</div>
+              <div class="tc-req">100K $SIGNAL</div>
+              <div class="tc-desc">Direct analyst access</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section id="community">
+  <div class="community-hero">
+    <h2 class="comm-title rv">Get<br><em>early.</em><br>Win big.</h2>
+    <p class="comm-sub rv" style="transition-delay:.1s">
+      ArtSignal members received early signals on <strong>Mad Lads at 30 SOL</strong>, <strong>$WIF at $0.08</strong>, and <strong>$BONK pre-CEX listing</strong>. Join 4,200+ traders reading the chain before the crowd.
+    </p>
+    <div class="social-row rv" style="transition-delay:.2s">
+      <a class="soc-card" href="#"><div class="soc-icon">✈</div><div class="soc-n">4.2K</div><div class="soc-label">Telegram</div></a>
+      <a class="soc-card" href="#"><div class="soc-icon">◈</div><div class="soc-n">3.1K</div><div class="soc-label">Discord</div></a>
+      <a class="soc-card" href="#"><div class="soc-icon">𝕏</div><div class="soc-n">18K</div><div class="soc-label">Twitter</div></a>
+    </div>
+    <div class="email-row rv" style="transition-delay:.3s">
+      <input type="email" class="email-in" id="emailIn" placeholder="your@email.com">
+      <button class="email-go" onclick="joinWL()">Join Alpha</button>
+    </div>
+    <p style="font-size:8px;letter-spacing:3px;color:var(--mid);text-transform:uppercase;" class="rv" style="transition-delay:.4s">No spam · Alpha only · Unsubscribe anytime</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// The Team</div>
+      <h2 class="sec-title rv">About <em>us</em></h2>
+    </div>
+  </div>
+  <div class="about-grid">
+    <div class="about-left">
+      <div class="about-body rv">
+        <p><strong>ArtSignal was built by degens, for degens.</strong> We met on-chain in 2022 — a Solana developer, a quantitative trader, and an NFT flipper who kept losing alpha to people who had better information. We decided to build the infrastructure instead.</p>
+        <p>Our signal methodology combines on-chain forensics, social graph analysis, wallet behavior profiling, and AI models trained on three years of Solana market data. We don't guess. We follow what wallets do, not what mouths say.</p>
+        <p><strong>Full transparency.</strong> Every signal is logged on-chain. Our track record is public. Bad calls acknowledged. In a space full of anonymous shills, accountability is the rarest alpha.</p>
+        <p>artsignal.fun is built on Solana. Powered by community. Governed by $SIGNAL holders.</p>
+      </div>
+    </div>
+    <div class="about-right rv" style="transition-delay:.1s">
+      <div class="manifesto-line">
+        <span class="man-num">§ 1</span>
+        <span class="man-q">"The signal is in the chain. Everything else is noise."</span>
+        <span class="man-src">Manifesto</span>
+      </div>
+      <div class="manifesto-line">
+        <span class="man-num">§ 2</span>
+        <span class="man-q">"We don't follow influencers. We follow wallets."</span>
+        <span class="man-src">Manifesto</span>
+      </div>
+      <div class="manifesto-line">
+        <span class="man-num">§ 3</span>
+        <span class="man-q">"Early information is not an edge. How you use it is."</span>
+        <span class="man-src">Manifesto</span>
+      </div>
+      <div class="manifesto-line">
+        <span class="man-num">§ 4</span>
+        <span class="man-q">"Accountability is the rarest alpha."</span>
+        <span class="man-src">Manifesto</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="partner-band">
+    <div class="partner-track">
+      <span class="partner-item">Solana</span><span class="partner-item">Jupiter</span><span class="partner-item">Tensor</span><span class="partner-item">Magic Eden</span><span class="partner-item">Helius</span><span class="partner-item">Dialect</span><span class="partner-item">Drift</span><span class="partner-item">Backpack</span><span class="partner-item">Jito</span><span class="partner-item">Marinade</span>
+      <span class="partner-item">Solana</span><span class="partner-item">Jupiter</span><span class="partner-item">Tensor</span><span class="partner-item">Magic Eden</span><span class="partner-item">Helius</span><span class="partner-item">Dialect</span><span class="partner-item">Drift</span><span class="partner-item">Backpack</span><span class="partner-item">Jito</span><span class="partner-item">Marinade</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-head">
+    <div>
+      <div class="sec-eyebrow">// Questions</div>
+      <h2 class="sec-title rv">FAQ</h2>
+    </div>
+  </div>
+  <div style="padding: 0 40px 80px">
+  <div class="faq-wrap">
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">What exactly is a "signal" from ArtSignal?</span><span class="faq-ic">+</span></button><div class="faq-a">A signal is a graded alert (Bull, Watch, or Caution) on a Solana NFT, meme coin, or project. It includes the on-chain evidence that triggered it, key levels, risk factors, and a conviction score from 1–10. Signals are intelligence for informed decisions — not financial advice.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">How is ArtSignal different from a typical crypto influencer?</span><span class="faq-ic">+</span></button><div class="faq-a">Every signal is logged on-chain. Our win rate and average return are published monthly with full transparency. We have no paid promotions or project partnerships that affect signal output. Influencers talk. We track wallets.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Do I need to hold $SIGNAL tokens to access signals?</span><span class="faq-ic">+</span></button><div class="faq-a">Free tier (Scout) receives delayed signals publicly. Real-time signals and NFT intelligence require staking a minimum of 5,000 $SIGNAL (Alpha tier). Higher tiers unlock pre-signal intelligence and direct analyst access.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">What's your historical win rate?</span><span class="faq-ic">+</span></button><div class="faq-a">Since private alpha in Q4 2024, ArtSignal has issued 847 signals with a 68.3% win rate (signals that hit at least 20% gain before stop loss). Full historical data including bad calls is published monthly on our public dashboard and logged on Solana.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">Is this financial advice?</span><span class="faq-ic">+</span></button><div class="faq-a">No. ArtSignal provides on-chain intelligence for informational purposes only. Nothing constitutes financial or investment advice. Always DYOR and never invest more than you can afford to lose.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-qt">When is the $SIGNAL TGE?</span><span class="faq-ic">+</span></button><div class="faq-a">The Token Generation Event is planned for Q2 2025 on Jupiter LFG launchpad. Whitelist spots are allocated to waitlist members first. Join the alpha waitlist to secure priority access.</div></div>
+  </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-col">
+      <div class="foot-logo">ArtSignal</div>
+      <p class="foot-tagline">The sharpest signal intelligence on Solana. NFT, meme, and project alpha — before the crowd finds out.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#signals">Live Signals</a></li>
+        <li><a href="#howitworks">Protocol</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+        <li><a href="#tokenomics">$SIGNAL</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Community</h4>
+      <ul>
+        <li><a href="#">Telegram Alpha</a></li>
+        <li><a href="#">Discord Server</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">Signal Dashboard</a></li>
+        <li><a href="#">Track Record</a></li>
+        <li><a href="#">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span class="foot-copy">© 2025 ArtSignal · artsignal.fun · Not financial advice. DYOR.</span>
+    <span class="foot-built">Built on Solana</span>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+(function loop(){
+  rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+// ── MAGNETIC BUTTONS
+document.querySelectorAll('.mag').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const dx=(e.clientX-r.left-r.width/2)*.25;
+    const dy=(e.clientY-r.top-r.height/2)*.25;
+    el.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform='');
+});
+
+// ── HAMBURGER
+document.getElementById('hamburger').addEventListener('click',()=>{
+  document.getElementById('mobMenu').classList.toggle('open');
+});
+function closeMob(){ document.getElementById('mobMenu').classList.remove('open'); }
+function scrollTo(sel){ document.querySelector(sel)?.scrollIntoView({behavior:'smooth'}); }
+
+// ── COUNTER ANIMATION
+function countUp(el, to, suffix='', dur=1600){
+  let start=null;
+  function step(ts){
+    if(!start) start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.round(ease*to).toLocaleString()+(suffix||'');
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const statsObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.stat-n').forEach(n=>{
+        countUp(n,+n.dataset.to,n.dataset.suffix||'');
+      });
+      statsObs.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+statsObs.observe(document.querySelector('.hero-stats'));
+
+// ── SCROLL REVEAL
+const rvObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('vis'); rvObs.unobserve(e.target); } });
+},{threshold:.1});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>rvObs.observe(el));
+
+// ── PROGRESS BARS
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.sig-bar-fill,.dr-bar-fill').forEach(b=>{
+        b.style.width=b.dataset.w+'%';
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+},{threshold:.2});
+document.querySelectorAll('.signal-table,.distrib').forEach(el=>barObs.observe(el));
+
+// ── SIGNAL FILTER
+function filterSig(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.signal-row').forEach(row=>{
+    row.style.display=(cat==='all'||row.dataset.cat===cat)?'':'none';
+  });
+}
+
+// ── FAQ
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const ans=item.querySelector('.faq-a');
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>{
+    i.classList.remove('open'); i.querySelector('.faq-a').classList.remove('open');
+  });
+  if(!open){ item.classList.add('open'); ans.classList.add('open'); }
+}
+
+// ── COPY CA
+function copyCA(){
+  navigator.clipboard.writeText('artSig4LkRmN8qZ7pGhX2vBsTyE9wK3jFnP6dA1cMr5QsignaL').catch(()=>{});
+  showToast('CA copied ✓');
+}
+
+// ── JOIN WAITLIST
+function joinWL(){
+  const v=document.getElementById('emailIn').value;
+  if(!v||!v.includes('@')){ showToast('Enter a valid email'); return; }
+  document.getElementById('emailIn').value='';
+  showToast('You\'re on the list ✓');
+}
+
+// ── TOAST
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2400);
+}
+
+// ── ACTIVE NAV
+window.addEventListener('scroll',()=>{
+  let cur='';
+  document.querySelectorAll('section[id]').forEach(s=>{
+    if(window.scrollY>=s.offsetTop-100) cur=s.id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    const isAct=a.getAttribute('href')==='#'+cur;
+    a.style.color=isAct?'var(--ink)':''
+    a.style.setProperty('--act',isAct?'1':'0');
+  });
+});
+</script>
+</body>
+</html>
